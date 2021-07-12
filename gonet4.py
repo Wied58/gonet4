@@ -18,13 +18,13 @@ from picamera import PiCamera
 from time import sleep
 from fractions import Fraction
 
+
+### Start of hard coded image parameters 
+
 # shutter speed (exposure time) in microseconds
 raspistill_ss = 6000000 
 
 tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
-
-#How many images do want?
-#number_of_images = 3
 
 # Sensitivity (ISO)
 ISO = 800
@@ -35,24 +35,17 @@ drc = 'off'
 #White Balance: off,auto,sun,cloud,shade,tungsten,fluorescent,incandescent,flash,horizon
 awb = 'off'
 
-# Mannually set white balance gains
+# Manually set white balance gains
 #white_balance_gains = '1.03125, 1.8086'
-white_balance_gains = '3.10, 1.70'
+white_balance_gains = ('3.10, 1.70')
 
 #Brightness
 br = 50
 
 
-#interval between images in milliseconds
-raspistill_tl = 0
+### End of hard coded image parameters
 
 
-
-# total time of the run in milliseconds (controls how many photos you take)
-# Exposure time converted to milliseconds + interval between images X number of images + an extra interval
-#raspistill_t = (((raspistill_ss/1000) + raspistill_tl) * (number_of_images +1)) 
-#raspistill_t = (((raspistill_ss/1000) + raspistill_tl) * (number_of_images)) 
-raspistill_t = 65000
 
 run_start_time = time.time()
 print ("run_start_time = " + str(run_start_time))
@@ -597,8 +590,9 @@ camera.framerate = Fraction(1, 6)
 camera.shutter_speed = raspistill_ss
 camera.iso = ISO
 camera.drc_strength=drc
-camera.awb_mode = awb
+#camera.awb_mode = awb
 camera.awb_gains = (3.10, 1.70)
+#camera.awb_gains = white_balance_gains
 camera.brightness = br
 camera.still_stats = True
 #camera.resolution = (2592, 1944)
@@ -622,6 +616,7 @@ for x in range(5):
 print("camera parameters")
 print(camera.resolution)
 print(camera.sensor_mode)
+print(camera.awb_gains)
 # The images collected with picamera yields a file about 2m small than raspisill
 
 print("Closing Camera")
