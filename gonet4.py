@@ -54,9 +54,9 @@ print ("run_start_time = " + str(run_start_time))
 logfile = open("/home/pi/Tools/Camera/gonet.log","a+")
 logfile.write("run_start_time = " + str(run_start_time) + "\n")
 now = datetime.now()
-logfile.write("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S") + "\n")
+#logfile.write("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S") + "\n")
 
-print ("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S"))
+#print ("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S"))
 
 scratch_dir = "/home/pi/Tools/Camera/scratch/"
 if not os.path.exists(scratch_dir):
@@ -175,18 +175,9 @@ subprocess.call('date')
 
 ##### End of setting sysdate #####
 
-run_start_time = time.time()
-print ("run_start_time = " + str(run_start_time))
+#run_start_time = time.time()
+#print ("run_start_time = " + str(run_start_time))
 
-
-#logfile = open("/home/pi/Tools/Camera/gonet.log","a+")
-#logfile.write("run_start_time = " + str(run_start_time) + "\n")
-#now = datetime.now()
-#logfile.write("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S") + "\n")
-#print ("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S"))
-
-#logfile.write("images = " + str(number_of_images) + " interval = " + str(raspistill_tl) + " shutter = " + str(raspistill_ss) + "\n")
-logfile.write("interval = " + str(raspistill_tl) + " shutter = " + str(raspistill_ss) + "\n")
 
 
 
@@ -346,7 +337,7 @@ if (disk_stat('/')) < 10:
 
 
 start_looking_for_GPS_time  = time.time()
-setup_time = str(start_looking_for_GPS_time - run_start_time)
+setup_time = str((start_looking_for_GPS_time - run_start_time))
 
 print ("setup_time = " + setup_time)
 logfile.write("setup_time = " + setup_time + "\n")
@@ -587,11 +578,12 @@ sleep(1)
 # Set a framerate of 1/6fps, then set shutter
 # speed to 6s and ISO to 800
 camera.framerate = Fraction(1, 6)
+#camera.framerate_range = (Fraction(1,100), Fraction(1,2)) 
 camera.shutter_speed = raspistill_ss
 camera.iso = ISO
 camera.drc_strength=drc
 #camera.awb_mode = awb
-camera.awb_gains = (3.10, 1.70)
+camera.awb_gains = (3.3476,1.5936)
 #camera.awb_gains = white_balance_gains
 camera.brightness = br
 camera.still_stats = True
