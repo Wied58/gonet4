@@ -22,7 +22,9 @@ from fractions import Fraction
 ### Start of hard coded image parameters 
 
 # shutter speed (exposure time) in microseconds
+#raspistill_ss = 1000000 
 raspistill_ss = 6000000 
+#raspistill_ss = 30000000 
 
 tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
 
@@ -577,8 +579,8 @@ camera = PiCamera(sensor_mode=3)
 sleep(1)
 # Set a framerate of 1/6fps, then set shutter
 # speed to 6s and ISO to 800
-camera.framerate = Fraction(1, 6)
-#camera.framerate_range = (Fraction(1,100), Fraction(1,2)) 
+#camera.framerate = Fraction(1, 6)
+camera.framerate_range = (Fraction(1,100), Fraction(1,2)) 
 camera.shutter_speed = raspistill_ss
 camera.iso = ISO
 camera.drc_strength=drc
