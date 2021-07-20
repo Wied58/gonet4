@@ -28,6 +28,9 @@ raspistill_ss = 6000000
 
 tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
 
+# Number of images
+number_of_images = 1
+
 # Sensitivity (ISO)
 ISO = 800
 
@@ -601,7 +604,8 @@ camera.exif_tags['GPS.GPSAltitude'] = exif_alt
 
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
 
-for x in range(5):
+#for x in range(5):
+for x in range(number_of_images):
    filename = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_%H%M%S_%s", gmtime()))  + ".jpg"
    print(scratch_dir + filename)
    camera.capture(scratch_dir + filename, bayer=True)
