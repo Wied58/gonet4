@@ -15,6 +15,8 @@ import syslog
 from datetime import datetime
 
 from picamera import PiCamera
+PiCamera.CAPTURE_TIMEOUT = 600
+print(PiCamera.CAPTURE_TIMEOUT)
 from time import sleep
 from fractions import Fraction
 
@@ -23,8 +25,8 @@ from fractions import Fraction
 
 # shutter speed (exposure time) in microseconds
 #raspistill_ss = 10000 
-raspistill_ss = 6000000 
-#raspistill_ss = 30000000 
+#raspistill_ss = 6000000 
+raspistill_ss = 30000000 
 
 tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
 
