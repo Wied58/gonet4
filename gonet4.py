@@ -22,7 +22,7 @@ from fractions import Fraction
 ### Start of hard coded image parameters 
 
 # shutter speed (exposure time) in microseconds
-#raspistill_ss = 1000000 
+#raspistill_ss = 10000 
 raspistill_ss = 6000000 
 #raspistill_ss = 30000000 
 
