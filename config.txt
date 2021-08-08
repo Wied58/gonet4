@@ -2,7 +2,7 @@
 number_of_images=2
 
 # Sensitivity (ISO)
-ISO = 400
+#ISO = 400
 
 #shutter_speed
 shutter_speed = 6000000

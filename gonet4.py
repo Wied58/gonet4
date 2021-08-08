@@ -17,7 +17,7 @@ from datetime import datetime
 
 from picamera import PiCamera
 PiCamera.CAPTURE_TIMEOUT = 600
-print(PiCamera.CAPTURE_TIMEOUT)
+#print(PiCamera.CAPTURE_TIMEOUT)
 from time import sleep
 from fractions import Fraction
 
@@ -32,7 +32,7 @@ raspistill_ss = 6000000
 tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
 
 # Number of images
-number_of_images = 1
+number_of_images = 5
 
 # Sensitivity (ISO)
 ISO = 800
@@ -56,54 +56,53 @@ br = 50
 ######## Start of parameter file read ###########
 
 
-if  len(sys.argv) == 2:
-   print("Using config file")
+if  len(sys.argv) >1:
 
-
-# Here is the important part! It takes that argument parameter and assigns to a variable name, or the file we will open
-ifname = sys.argv[1]
-
-# open the file config.txt file
-with open(ifname) as params:
-
-  #iterate (loop) through the lines of the file
-  for line in params:
-
-#   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, print it.  We'll talk about strip later
-    if line[0] != '#' and len(line.strip()) > 0: 
-
-#      We replace the newlinw \n, then split the line at the equal sign.
-       spline = line.replace('\n','').split('=')
-#       print(spline)
-
-
-#      Here we iterate, or loop, across the list, strip the spaces off the ends of the list elements
-       stripped_spline = [x.strip() for x in spline]
-
-#      Now we print the pieces, or elemments of the list.
-#       print(stripped_spline[0], stripped_spline[1])
-
-
-
-
-
-#       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
-#       we can start parsing the information into parameters to feed the camera.
-
-
-
-       if stripped_spline[0] == 'number_of_images':
-           number_of_images = int(stripped_spline[1])
-           print (f"Overriding number_of_images from config file to  {number_of_images}")
-
-       elif stripped_spline[0] == 'shutter_speed':
-           shutter_speed = int(stripped_spline[1])
-           #(shutter_speed)
-           print (f"Overriding shutter_speed from config file to  {shutter_speed}")
-
-       elif stripped_spline[0] == 'ISO':
-           ISO = int(stripped_spline[1])
-           print (f"Overriding ISO from config file to  {ISO}") 
+   # Here is the important part! It takes that argument parameter and assigns to a variable name, or the file we will open
+   ifname = sys.argv[1]
+   print(f"Using config file {ifname}")
+   
+   # open the file config.txt file
+   with open(ifname) as params:
+   
+     #iterate (loop) through the lines of the file
+     for line in params:
+   
+   #   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, print it.  We'll talk about strip later
+       if line[0] != '#' and len(line.strip()) > 0: 
+   
+   #      We replace the newlinw \n, then split the line at the equal sign.
+          spline = line.replace('\n','').split('=')
+   #       print(spline)
+   
+   
+   #      Here we iterate, or loop, across the list, strip the spaces off the ends of the list elements
+          stripped_spline = [x.strip() for x in spline]
+   
+   #      Now we print the pieces, or elemments of the list.
+   #       print(stripped_spline[0], stripped_spline[1])
+   
+   
+   
+   
+   
+   #       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
+   #       we can start parsing the information into parameters to feed the camera.
+   
+   
+   
+          if stripped_spline[0] == 'number_of_images':
+              number_of_images = int(stripped_spline[1])
+              print (f"Overriding number_of_images from config file to  {number_of_images}")
+   
+          elif stripped_spline[0] == 'shutter_speed':
+              shutter_speed = int(stripped_spline[1])
+              #(shutter_speed)
+              print (f"Overriding shutter_speed from config file to  {shutter_speed}")
+   
+          elif stripped_spline[0] == 'ISO':
+              ISO = int(stripped_spline[1])
+              print (f"Overriding ISO from config file to  {ISO}") 
 
 ######## End of parameter file read ###########
 
@@ -666,11 +665,10 @@ for x in range(number_of_images):
    camera.capture(scratch_dir + filename, bayer=True)
    #camera.capture("J_" + filename)
 
-print("camera parameters")
-print(camera.resolution)
-print(camera.sensor_mode)
-print(camera.awb_gains)
-# The images collected with picamera yields a file about 2m small than raspisill
+#print("camera parameters")
+#print(camera.resolution)
+#print(camera.sensor_mode)
+#print(camera.awb_gains)
 
 print("Closing Camera")
 camera.close()
