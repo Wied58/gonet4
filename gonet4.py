@@ -54,7 +54,8 @@ br = 50
 ### End of hard coded image parameters
 
 ######## Start of parameter file read ###########
-
+# If a an argument is given to gonet4.py, that file will be read ignoring any lines that begin with # or are blank. 
+# The file will be read to accept overrides of the number of images, shutter speed, and ISO settings
 
 if  len(sys.argv) >1:
 
@@ -68,10 +69,11 @@ if  len(sys.argv) >1:
      #iterate (loop) through the lines of the file
      for line in params:
    
-   #   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, print it.  We'll talk about strip later
+   #   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, process it.  We'll talk about strip later
+
        if line[0] != '#' and len(line.strip()) > 0: 
    
-   #      We replace the newlinw \n, then split the line at the equal sign.
+   #      We replace the newline \n, then split the line at the equal sign.
           spline = line.replace('\n','').split('=')
    #       print(spline)
    
@@ -81,9 +83,6 @@ if  len(sys.argv) >1:
    
    #      Now we print the pieces, or elemments of the list.
    #       print(stripped_spline[0], stripped_spline[1])
-   
-   
-   
    
    
    #       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
