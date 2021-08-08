@@ -4,6 +4,7 @@ import serial
 import subprocess
 import socket
 import os
+import sys
 import shutil
 import time
 from time import gmtime, strftime
@@ -52,7 +53,59 @@ br = 50
 
 ### End of hard coded image parameters
 
+######## Start of parameter file read ###########
 
+
+if  len(sys.argv) == 2:
+   print("Using config file")
+
+
+# Here is the important part! It takes that argument parameter and assigns to a variable name, or the file we will open
+ifname = sys.argv[1]
+
+# open the file config.txt file
+with open(ifname) as params:
+
+  #iterate (loop) through the lines of the file
+  for line in params:
+
+#   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, print it.  We'll talk about strip later
+    if line[0] != '#' and len(line.strip()) > 0: 
+
+#      We replace the newlinw \n, then split the line at the equal sign.
+       spline = line.replace('\n','').split('=')
+#       print(spline)
+
+
+#      Here we iterate, or loop, across the list, strip the spaces off the ends of the list elements
+       stripped_spline = [x.strip() for x in spline]
+
+#      Now we print the pieces, or elemments of the list.
+#       print(stripped_spline[0], stripped_spline[1])
+
+
+
+
+
+#       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
+#       we can start parsing the information into parameters to feed the camera.
+
+
+
+       if stripped_spline[0] == 'number_of_images':
+           number_of_images = int(stripped_spline[1])
+           print (f"Overriding number_of_images from config file to  {number_of_images}")
+
+       elif stripped_spline[0] == 'shutter_speed':
+           shutter_speed = int(stripped_spline[1])
+           #(shutter_speed)
+           print (f"Overriding shutter_speed from config file to  {shutter_speed}")
+
+       elif stripped_spline[0] == 'ISO':
+           ISO = int(stripped_spline[1])
+           print (f"Overriding ISO from config file to  {ISO}") 
+
+######## End of parameter file read ###########
 
 run_start_time = time.time()
 print ("run_start_time = " + str(run_start_time))
