@@ -92,16 +92,16 @@ if  len(sys.argv) >1:
    
           if stripped_spline[0] == 'number_of_images':
               number_of_images = int(stripped_spline[1])
-              print (f"Overriding number_of_images from config file to  {number_of_images}")
+              print (f"Overriding number_of_images from config file to: {number_of_images}")
    
           elif stripped_spline[0] == 'shutter_speed':
               shutter_speed = int(stripped_spline[1])
               #(shutter_speed)
-              print (f"Overriding shutter_speed from config file to  {shutter_speed}")
+              print (f"Overriding shutter_speed from config file to: {shutter_speed}")
    
           elif stripped_spline[0] == 'ISO':
               ISO = int(stripped_spline[1])
-              print (f"Overriding ISO from config file to  {ISO}") 
+              print (f"Overriding ISO from config file to: {ISO}") 
 
 ######## End of parameter file read ###########
 
@@ -657,9 +657,13 @@ camera.exif_tags['GPS.GPSAltitude'] = exif_alt
 
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
 
+start_of_run_time = strftime("%H%M%S", gmtime())
+print(f"Start of run time = {start_of_run_time}")
+
 #for x in range(5):
 for x in range(number_of_images):
-   filename = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_%H%M%S_%s", gmtime()))  + ".jpg"
+   #filename = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_%H%M%S_%s", gmtime()))  + ".jpg"
+   filename = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_", gmtime()))  + start_of_run_time + (strftime("_%s", gmtime())) + ".jpg"
    print(scratch_dir + filename)
    camera.capture(scratch_dir + filename, bayer=True)
    #camera.capture("J_" + filename)
