@@ -44,8 +44,8 @@ drc = 'off'
 awb = 'off'
 
 # Manually set white balance gains
-#white_balance_gains = '1.03125, 1.8086'
-white_balance_gains = ('3.10, 1.70')
+#white_balance_gains = ('3.35, 1.59')
+white_balance_gains = (3.35, 1.59)
 
 #Brightness
 br = 50
@@ -573,7 +573,7 @@ print (version)
 ## Old gonet3.py tag
 ## White Text
 ##d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_raspistill_ss + " S"\
-#+ " ISO: " + str(ISO) + " WB: " + white_balance_gains, font=font, fill=(255,255,255))
+#+ " ISO: " + str(ISO) + " WB: " + str(white_balance_gains), font=font, fill=(255,255,255))
 ## Next Line 
 #d.text((20,70), strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
 #img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
@@ -641,8 +641,8 @@ camera.shutter_speed = raspistill_ss
 camera.iso = ISO
 camera.drc_strength=drc
 #camera.awb_mode = awb
-camera.awb_gains = (3.3476,1.5936)
-#camera.awb_gains = white_balance_gains
+#camera.awb_gains = (3.3476,1.5936)
+camera.awb_gains = white_balance_gains
 camera.brightness = br
 camera.still_stats = True
 #camera.resolution = (2592, 1944)

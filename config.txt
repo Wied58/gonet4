@@ -5,7 +5,8 @@ number_of_images=2
 ISO = 400
 
 #shutter_speed
-shutter_speed = 6000000
+#shutter_speed = 6000000
+shutter_speed = 6000
 
 
 
