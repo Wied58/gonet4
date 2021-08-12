@@ -34,7 +34,7 @@ import set_system_time_from_gps
 shutter_speed = 6000000
 
 #tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
-tag_raspistill_ss = str(round(shutter_speed/1000000, 2))
+#tag_raspistill_ss = str(round(shutter_speed/1000000, 2))
 
 # Number of images
 number_of_images = 5
@@ -109,6 +109,10 @@ if  len(sys.argv) >1:
               print (f"Overriding ISO from config file to: {ISO}") 
 
 ######## End of parameter file read ###########
+
+
+
+tag_raspistill_ss = str(round(shutter_speed/1000000, 2))
 
 run_start_time = time.time()
 print ("run_start_time = " + str(run_start_time))

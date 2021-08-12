@@ -1,5 +1,5 @@
 #How many images do want?
-number_of_images=5
+number_of_images=2
 
 # Sensitivity (ISO)
 ISO = 800
