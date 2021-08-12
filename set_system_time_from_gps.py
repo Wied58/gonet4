@@ -90,5 +90,6 @@ print ("restarting network time servivce")
 command = ['sudo', 'systemctl', 'start', 'systemd-timesyncd.service']
 subprocess.call(command)
 subprocess.call('date')
+ser.close()
 
 ##### End of setting sysdate #####
