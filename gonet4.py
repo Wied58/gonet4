@@ -29,10 +29,12 @@ import set_system_time_from_gps
 
 # shutter speed (exposure time) in microseconds
 #raspistill_ss = 10000 
-raspistill_ss = 6000000 
+#raspistill_ss = 6000000 
 #raspistill_ss = 30000000 
+shutter_speed = 6000000
 
-tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
+#tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
+tag_raspistill_ss = str(round(shutter_speed/1000000, 2))
 
 # Number of images
 number_of_images = 5
@@ -576,14 +578,6 @@ else:
    version  = ''.join(glob.glob(os.path.join('/home/pi/Tools/Version', '*'))).split("/")[5]
 print (version)
 
-## Old gonet3.py tag
-## White Text
-##d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_raspistill_ss + " S"\
-#+ " ISO: " + str(ISO) + " WB: " + str(white_balance_gains), font=font, fill=(255,255,255))
-## Next Line 
-#d.text((20,70), strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
-#img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
-     
 # White Text
 d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_raspistill_ss + " S"\
 + " ISO: " + str(ISO) + " " + strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
@@ -643,7 +637,8 @@ sleep(1)
 # speed to 6s and ISO to 800
 #camera.framerate = Fraction(1, 6)
 camera.framerate_range = (Fraction(1,100), Fraction(1,2)) 
-camera.shutter_speed = raspistill_ss
+#camera.shutter_speed = raspistill_ss
+camera.shutter_speed = shutter_speed
 camera.iso = ISO
 camera.drc_strength=drc
 #camera.awb_mode = awb
