@@ -86,7 +86,7 @@ while i < 5:
 
    i += 1
 
-print ("restarting network time servivce")
+print ("restarting network time service")
 command = ['sudo', 'systemctl', 'start', 'systemd-timesyncd.service']
 subprocess.call(command)
 subprocess.call('date')
