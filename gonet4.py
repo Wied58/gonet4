@@ -599,9 +599,9 @@ logfile.write("create_image_tag = " + create_image_tag + "\n")
 ########### start of raspistill  ##############
 
 #image_file_name = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_%H%M%S", gmtime())) + "_%03d"
-image_file_name = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_%H%M%S", gmtime())) + "_%d"
-print ("image_file_name = " + image_file_name)
-logfile.write("image_file_name = " + image_file_name + "\n")
+#image_file_name = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_%H%M%S", gmtime())) + "_%d"
+#print ("image_file_name = " + image_file_name)
+#logfile.write("image_file_name = " + image_file_name + "\n")
 
 ##command = ['/usr/bin/raspistill', '-v',
 #                         '-t', str(raspistill_t),
