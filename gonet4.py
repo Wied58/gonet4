@@ -112,7 +112,7 @@ if  len(sys.argv) >1:
 
 
 
-tag_raspistill_ss = str(round(shutter_speed/1000000, 2))
+tag_ss = str(round(shutter_speed/1000000, 2))
 
 run_start_time = time.time()
 print ("run_start_time = " + str(run_start_time))
@@ -583,7 +583,7 @@ else:
 print (version)
 
 # White Text
-d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_raspistill_ss + " S"\
+d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_ss + "s"\
 + " ISO: " + str(ISO) + " " + strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
 img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
 
