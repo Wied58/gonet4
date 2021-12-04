@@ -1,0 +1,4 @@
+ISO=800
+shutter_speed=30000
+number_of_images=1
+frequency=30s
