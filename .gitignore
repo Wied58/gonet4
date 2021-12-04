@@ -1,0 +1,7 @@
+GPS/
+__pycache__/
+dejavu/
+gonet.log
+gonet4.py.*
+gonet4/
+scratch/
