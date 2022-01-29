@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#i!/usr/bin/python3
 
 
 
@@ -61,6 +61,7 @@ br = 50
 ######## Start of parameter file read ###########
 # If a an argument is given to gonet4.py, that file will be read ignoring any lines that begin with # or are blank. 
 # The file will be read to accept overrides of the number of images, shutter speed, and ISO settings
+ifname = "default"
 
 if  len(sys.argv) >1:
 
@@ -751,7 +752,8 @@ logfile.write("total_time = " + total_run_time + "\n")
 print ("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count))
 print ("")
 
-logfile.write("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count) + "\n")
+#logfile.write("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count) + "\n")
+logfile.write("perf," + now.strftime("%m/%d/%Y, %H:%M:%S") + "," + ifname + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(photo_count) + "\n")
 logfile.write("\n")
 
 logfile.flush()
