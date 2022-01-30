@@ -1,4 +1,4 @@
 ISO=800
-shutter_speed=6000
+shutter_speed=6000000
 number_of_images=5
 frequency=5min
