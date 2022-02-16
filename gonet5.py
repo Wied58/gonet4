@@ -178,20 +178,28 @@ def disk_stat(path):
 
 def convert_gps_lat_to_exif_lat(lat_tuple):
      (lat_fraction, lat_deg) = lat_tuple
-     lat_min = int(lat_fraction/60)
-     lat_sec = int(lat_min / 60) 
-     #return (f"lat_deg: {lat_deg}, lat_min: {lat_min}, lat_sec: {lat_sec}")
+     lat_deg = int(abs(lat_deg))
+     lat_min = (lat_fraction/60)
+     lat_sec = (lat_min / 60) 
+     print (f"lat_deg: {lat_deg}, lat_min: {lat_min}, lat_sec: {lat_sec}")
+     return (f"{str(lat_deg)}/1,{str(lat_min)}/1,{str(lat_sec)}/1")
+     print (f"{str(lat_deg)}/1,{str(lat_min)}/1,{str(lat_sec)}/1")
+
+
+
      #return deg + "/1," + min + "/1," + sec + "/1"
-     return (f"{abs(lat_deg)}/1,{lat_min}/1,{lat_sec}/1")
+     #print(str(lat_deg) + "/1," + str(lat_min) + "/1," + str(lat_sec) + "/1")
+     #return str(lat_deg) + "/1," + str(lat_min) + "/1," + str(lat_sec) + "/1"
 
 
 def convert_gps_long_to_exif_long(long_tuple):
      (long_fraction, long_deg) = long_tuple
-     long_min = int(long_fraction/60)
-     long_sec = int(long_min / 60) 
-     #return (f"long_deg: {long_deg}, long_min: {long_min}, long_sec: {long_sec}")
-     #return deg + "/1," + min + "/1," + sec + "/1"
-     return (f"{abs(long_deg)}/1,{long_min}/1,{long_sec}/1")
+     long_deg = int(abs(long_deg))
+     long_min = (long_fraction/60)
+     long_sec = (long_min / 60) 
+     print(f"long_deg: {long_deg}, long_min: {long_min}, long_sec: {long_sec}")
+     return (f"'{str(long_deg)}/1,{str(long_min)}/1,{str(long_sec)}/1'")
+     print (f"'{str(long_deg)}/1,{str(long_min)}/1,{str(long_sec)}/1'")
 
 # West, South are negative
 
@@ -228,9 +236,10 @@ print()
 lat_tuple = math.modf(latitude) 
 long_tuple = math.modf(longitude) 
 
-print(convert_gps_lat_to_exif_lat(lat_tuple), get_exif_lat_dir(latitude))
-print(convert_gps_long_to_exif_long(long_tuple), get_exif_long_dir(longitude))
-
+exif_latitude = convert_gps_lat_to_exif_lat(lat_tuple)
+print(f"exif_latitude = {exif_latitude}")
+exif_longitude = convert_gps_long_to_exif_long(long_tuple)
+print(f"exif_longitude = {exif_longitude}")
 
 ##### Imaging begins here! #####
 
@@ -304,12 +313,12 @@ camera.still_stats = True
 camera.resolution = (4056, 3040)
 
 
-camera.exif_tags['GPS.GPSLongitude'] = convert_gps_long_to_exif_long(long_tuple)
+camera.exif_tags['GPS.GPSLongitude'] = exif_longitude
 camera.exif_tags['GPS.GPSLongitudeRef'] = get_exif_long_dir(longitude)
-camera.exif_tags['GPS.GPSLatitude'] = convert_gps_lat_to_exif_lat(lat_tuple)
+camera.exif_tags['GPS.GPSLatitude'] = exif_latitude 
 camera.exif_tags['GPS.GPSLatitudeRef'] = get_exif_lat_dir(latitude)
-#fix me later
-#camera.exif_tags['GPS.GPSAltitude'] = exif_alt
+##fix me later
+##camera.exif_tags['GPS.GPSAltitude'] = exif_alt
 
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
 
@@ -388,28 +397,28 @@ os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Ready) &
 
 
 
-finish_time = time.time()
-post_processing_time = str(finish_time - start_post_processing_time)
-print ("post_processing_time = " + post_processing_time)
-logfile.write("post_processing_time = " + post_processing_time + "\n")
+#finish_time = time.time()
+#post_processing_time = str(finish_time - start_post_processing_time)
+#print ("post_processing_time = " + post_processing_time)
+#logfile.write("post_processing_time = " + post_processing_time + "\n")
 
 
 
-total_run_time = str(finish_time - run_start_time)
-print ("total_time = " + total_run_time)
-logfile.write("total_time = " + total_run_time + "\n")
-
-print ("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count))
-print ("")
-
-#logfile.write("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count) + "\n")
-logfile.write("perf," + now.strftime("%m/%d/%Y, %H:%M:%S") + "," + ifname + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(photo_count) + "\n")
-logfile.write("\n")
-
+#total_run_time = str(finish_time - run_start_time)
+#print ("total_time = " + total_run_time)
+#logfile.write("total_time = " + total_run_time + "\n")
+#
+#print ("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count))
+#print ("")
+#
+##logfile.write("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count) + "\n")
+#logfile.write("perf," + now.strftime("%m/%d/%Y, %H:%M:%S") + "," + ifname + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(photo_count) + "\n")
+#logfile.write("\n")
+#
 logfile.flush()
 logfile.close()
-
-with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
-    fout.writelines(deque(fin, 10000))
-os.remove("/home/pi/Tools/Camera/gonet.log")
-os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")
+#
+#with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
+#    fout.writelines(deque(fin, 10000))
+#os.remove("/home/pi/Tools/Camera/gonet.log")
+#os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")

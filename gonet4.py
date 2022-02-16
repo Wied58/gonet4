@@ -23,7 +23,7 @@ PiCamera.CAPTURE_TIMEOUT = 600
 from time import sleep
 from fractions import Fraction
 
-import set_system_time_from_gps
+#import set_system_time_from_gps
 
 ### Start of hard coded image parameters 
 
@@ -543,6 +543,7 @@ if gps_flag == 2:
 #   logfile.write("Processed GPS Data = " + image_gps_fix + "\n")
    
    exif_lat = convert_raw_gps_fix_to_exif_lat(raw_gps_fix)
+   print(f"EXIF_LAT= {exif_lat}")
    exif_lat_dir = convert_raw_gps_fix_to_exif_lat_dir(raw_gps_fix)
    exif_long = convert_raw_gps_fix_to_exif_long(raw_gps_fix)
    exif_long_dir = convert_raw_gps_fix_to_exif_long_dir(raw_gps_fix)
