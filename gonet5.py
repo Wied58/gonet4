@@ -176,30 +176,33 @@ def disk_stat(path):
     percent = (disk.f_bavail * 100.0) / disk.f_blocks
     return percent
 
-def convert_gps_lat_to_exif_lat(lat_tuple):
-     (lat_fraction, lat_deg) = lat_tuple
-     lat_deg = int(abs(lat_deg))
-     lat_min = (lat_fraction/60)
-     lat_sec = (lat_min / 60) 
-     print (f"lat_deg: {lat_deg}, lat_min: {lat_min}, lat_sec: {lat_sec}")
-     return (f"{str(lat_deg)}/1,{str(lat_min)}/1,{str(lat_sec)}/1")
-     print (f"{str(lat_deg)}/1,{str(lat_min)}/1,{str(lat_sec)}/1")
+def convert_gps_lat_to_exif_lat(latitude):
+     latitude = abs(latitude)
+     mnt,sec = divmod(latitude*3600,60)
+     deg,mnt = divmod(mnt,60)
+
+     deg = int(round(deg,0))
+     mnt = int(round(mnt,0))
+     sec = int(round(sec,0))
+
+     print (f"lat_deg: {deg}, lat_min: {mnt}, lat_sec: {sec}")
+     return (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
+     print (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
 
 
+def convert_gps_long_to_exif_long(longitude):
+     longitude = abs(longitude)
+     mnt,sec = divmod(longitude*3600,60)
+     deg,mnt = divmod(mnt,60)
 
-     #return deg + "/1," + min + "/1," + sec + "/1"
-     #print(str(lat_deg) + "/1," + str(lat_min) + "/1," + str(lat_sec) + "/1")
-     #return str(lat_deg) + "/1," + str(lat_min) + "/1," + str(lat_sec) + "/1"
+     deg = int(round(deg,0))
+     mnt = int(round(mnt,0))
+     sec = int(round(sec,0))
 
+     print (f"long_deg: {deg}, long_min: {mnt}, long_sec: {sec}")
+     return (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
+     print (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
 
-def convert_gps_long_to_exif_long(long_tuple):
-     (long_fraction, long_deg) = long_tuple
-     long_deg = int(abs(long_deg))
-     long_min = (long_fraction/60)
-     long_sec = (long_min / 60) 
-     print(f"long_deg: {long_deg}, long_min: {long_min}, long_sec: {long_sec}")
-     return (f"'{str(long_deg)}/1,{str(long_min)}/1,{str(long_sec)}/1'")
-     print (f"'{str(long_deg)}/1,{str(long_min)}/1,{str(long_sec)}/1'")
 
 # West, South are negative
 
@@ -233,12 +236,10 @@ print (f"lat: {fetch_gps.GPSLat}")
 print (f"long: {fetch_gps.GPSLong}")
 print()
 
-lat_tuple = math.modf(latitude) 
-long_tuple = math.modf(longitude) 
 
-exif_latitude = convert_gps_lat_to_exif_lat(lat_tuple)
+exif_latitude = convert_gps_lat_to_exif_lat(latitude)
 print(f"exif_latitude = {exif_latitude}")
-exif_longitude = convert_gps_long_to_exif_long(long_tuple)
+exif_longitude = convert_gps_long_to_exif_long(longitude)
 print(f"exif_longitude = {exif_longitude}")
 
 ##### Imaging begins here! #####
