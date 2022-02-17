@@ -32,9 +32,6 @@ from fractions import Fraction
 ### Start of hard coded image parameters 
 
 # shutter speed (exposure time) in microseconds
-#raspistill_ss = 10000 
-#raspistill_ss = 6000000 
-#raspistill_ss = 30000000 
 shutter_speed = 6000000
 
 #tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
@@ -231,9 +228,11 @@ if (disk_stat('/')) < 10:
 
 latitude = fetch_gps.GPSLat
 longitude = fetch_gps.GPSLong
+altitude = fetch_gps.GPSAlt
 
 print (f"lat: {fetch_gps.GPSLat}")
 print (f"long: {fetch_gps.GPSLong}")
+print (f"alt: {fetch_gps.GPSAlt}")
 print()
 
 
@@ -274,11 +273,11 @@ else:
 print (version)
 
 # White Text
+image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(longitude))} {get_exif_long_dir(longitude)}")
+d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_ss + "s"\
++ " ISO: " + str(ISO) + " " + strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
 
-#d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_ss + "s"\
-#+ " ISO: " + str(ISO) + " " + strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
-
-d.text((20,10), "The tag needs work   "  , font=font, fill=(255,255,255))
+#d.text((20,10), "The tag needs work   "  , font=font, fill=(255,255,255))
 img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
 
      
@@ -318,8 +317,10 @@ camera.exif_tags['GPS.GPSLongitude'] = exif_longitude
 camera.exif_tags['GPS.GPSLongitudeRef'] = get_exif_long_dir(longitude)
 camera.exif_tags['GPS.GPSLatitude'] = exif_latitude 
 camera.exif_tags['GPS.GPSLatitudeRef'] = get_exif_lat_dir(latitude)
-##fix me later
-##camera.exif_tags['GPS.GPSAltitude'] = exif_alt
+# Oddly alt was showing up at feet in Mac Preview. 
+# So, I fixed that by timsing alt by 3.28084
+#camera.exif_tags['GPS.GPSAltitude'] = str((altitude * 3.28084))
+camera.exif_tags['GPS.GPSAltitude'] = str(altitude)
 
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
 
