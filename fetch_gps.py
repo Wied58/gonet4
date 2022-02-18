@@ -20,16 +20,17 @@ file.close
 
 gpsd = gps(mode=WATCH_ENABLE|WATCH_NEWSTYLE)
 
-#x = 0
+x = 0
 
-while True:
+while 1:
 #    print (x)
 
     GPSLat = "0.0"
     GPSLong = "0.0"
     GPSTime = "00:00:00"
     GPSAlt = "000"
-    GPSStatus = "0"
+    GPSMode = "0"
+    GPSSats = "0"
 
 # Get timestamp
     CurrTimestamp = datetime.now()
@@ -41,6 +42,7 @@ while True:
         GPSTime = getattr(report,'time','')
         GPSAlt = getattr(report,'alt','nan')
         GPSMode = getattr(report,'mode','nan')
+        GPSSats = getattr(report,'sats','no sats')
     
     if GPSLat != "0.0" and GPSLong != "0.0" and GPSAlt != "nan":
 #        print("Timestamp: ", CurrTimestamp)
@@ -52,10 +54,14 @@ while True:
         break
 
 
+
+#    time.sleep(0.8)
+    x += 1
+
+    if x == 30:
+       break
+
 # Write data to a log
 file = open('GPSLog.csv', 'w')
 file.write(str(CurrTimestamp) + "," + str(GPSLat) + "," + str(GPSLong) + "," + str(GPSTime) + "," + str(GPSAlt) +  "\n")
 file.close
-
-#    time.sleep(0.8)
-#    x += 1

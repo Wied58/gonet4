@@ -548,6 +548,7 @@ if gps_flag == 2:
    exif_long = convert_raw_gps_fix_to_exif_long(raw_gps_fix)
    exif_long_dir = convert_raw_gps_fix_to_exif_long_dir(raw_gps_fix)
    exif_alt = convert_raw_gps_fix_to_exif_alt(raw_gps_fix)
+   print(exif_alt, type(exif_alt))
 
 ##### done with gps string manipulation #####
 
