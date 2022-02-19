@@ -1,4 +1,4 @@
-Punch List for gpsd gonet
+
 
 * Logging 
    - Image data
@@ -27,5 +27,11 @@ Punted problems
 * Altitude is not accutratly making into image exif
 
 * Sat count not working
+
+***********************************
+
+Items for discussion
+
+* Can we use one of the exif free text fields - software, or author - for a csv string of the meta data as we would like to load in into Dynamo DB?
 
 
