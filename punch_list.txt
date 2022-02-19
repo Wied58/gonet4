@@ -1,0 +1,31 @@
+Punch List for gpsd gonet
+
+* Logging 
+   - Image data
+   - GPS
+   - Performance
+
+* If gps fix not available
+
+* Interface with Laris
+
+* refactor old stuff for f-strings
+
+* inform people of test.cfg
+
+* Put ALT in image tag
+
+* where to place next Sunrise/Sunset test
+
+* How to communicate next Sunrise/Sunset data
+
+
+***********************************
+
+Punted problems
+
+* Altitude is not accutratly making into image exif
+
+* Sat count not working
+
+
