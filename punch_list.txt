@@ -19,6 +19,8 @@
 
 * How to communicate next Sunrise/Sunset data
 
+* look into gpsd age
+
 
 ***********************************
 
