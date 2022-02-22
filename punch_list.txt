@@ -13,7 +13,9 @@
 
 * inform people of test.cfg
 
-* Put ALT in image tag
+x Put ALT in image tag
+
+* do we collect Sunrise/Sunset data on startup, or with the image cycle
 
 * where to place next Sunrise/Sunset test
 

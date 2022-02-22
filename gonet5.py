@@ -278,7 +278,7 @@ else:
 print (version)
 
 # White Text
-image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(longitude))} {get_exif_long_dir(longitude)}")
+image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(longitude))} {get_exif_long_dir(longitude)} {altitude} M")
 d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_ss + "s"\
 + " ISO: " + str(ISO) + " " + strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
 
@@ -322,9 +322,20 @@ camera.exif_tags['GPS.GPSLongitude'] = exif_longitude
 camera.exif_tags['GPS.GPSLongitudeRef'] = get_exif_long_dir(longitude)
 camera.exif_tags['GPS.GPSLatitude'] = exif_latitude 
 camera.exif_tags['GPS.GPSLatitudeRef'] = get_exif_lat_dir(latitude)
-camera.exif_tags['GPS.GPSAltitude'] = 
+camera.exif_tags['GPS.GPSAltitude'] =  str(altitude)
 
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
+
+adler_exif_tags = (f"\
+Hostname: {socket.gethostname()}, \
+Version: {version}, \
+WB: {str(white_balance_gains)}, \
+Lat: {latitude}, \
+Long: {longitude}, \
+Alt: {altitude}\
+")
+
+camera.exif_tags['IFD0.Artist'] = adler_exif_tags 
 
 start_of_run_time = strftime("%H%M%S", gmtime())
 print(f"Start of run time = {start_of_run_time}")
