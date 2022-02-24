@@ -18,7 +18,7 @@ from datetime import datetime
 import math
 #from pysolar.solar import * 
 #import pytz
-import fetch_gps
+#import fetch_gps
 
 
 from picamera import PiCamera
