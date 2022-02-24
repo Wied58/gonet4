@@ -18,8 +18,8 @@ from datetime import datetime
 import math
 #from pysolar.solar import * 
 #import pytz
-#import fetch_gps
-
+import fetch_gps
+import GPSFix
 
 from picamera import PiCamera
 PiCamera.CAPTURE_TIMEOUT = 600

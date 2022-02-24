@@ -45,21 +45,20 @@ while 1:
         GPSSats = getattr(report,'sats','no sats')
     
     if GPSLat != "0.0" and GPSLong != "0.0" and GPSAlt != "nan":
-#        print("Timestamp: ", CurrTimestamp)
-#        print ("Lat: ", GPSLat)
-#        print ("Long: ", GPSLong)
-#        print ("GPS Time: ", GPSTime)
-#        print ("Altitude: ", GPSAlt)
-#        print ("Mode: ", GPSMode)
         break
-
-
-
-#    time.sleep(0.8)
     x += 1
 
     if x == 30:
        break
+
+
+with open('GPSFix.py', "w") as f:
+#        f.write(f"timestamp = {CurrTimestamp}\n")
+        f.write(f"lat = {GPSLat}\n")
+        f.write(f"long = {GPSLong}\n")
+#        f.write(f"gps_time = {GPSTime}\n")
+        f.write(f"altitude = {GPSAlt}\n")
+        f.write(f"mode = {GPSMode}\n")
 
 # Write data to a log
 file = open('GPSLog.csv', 'w')
