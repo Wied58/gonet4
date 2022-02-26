@@ -16,8 +16,6 @@ import re
 from collections import deque
 from datetime import datetime
 import math
-#from pysolar.solar import * 
-#import pytz
 sys.path.insert(0, '/home/pi/Tools/FetchGPS')
 import GPSFix
 
@@ -46,7 +44,6 @@ drc = 'off'
 awb = 'off'
 
 # Manually set white balance gains
-#white_balance_gains = ('3.35, 1.59')
 white_balance_gains = (3.35, 1.59)
 
 #Brightness
@@ -64,7 +61,6 @@ if  len(sys.argv) >1:
 
    # Here is the important part! It takes that argument parameter and assigns to a variable name, or the file we will open
    ifname = sys.argv[1]
-   print(f"Using config file {ifname}")
    
    # open the file config.txt file
    with open(ifname) as params:
@@ -85,7 +81,6 @@ if  len(sys.argv) >1:
           stripped_spline = [x.strip() for x in spline]
    
    #      Now we print the pieces, or elemments of the list.
-   #       print(stripped_spline[0], stripped_spline[1])
    
    
    #       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
@@ -95,16 +90,12 @@ if  len(sys.argv) >1:
    
           if stripped_spline[0] == 'number_of_images':
               number_of_images = int(stripped_spline[1])
-              print (f"Overriding number_of_images from config file to: {number_of_images}")
    
           elif stripped_spline[0] == 'shutter_speed':
               shutter_speed = int(stripped_spline[1])
-              #(shutter_speed)
-              print (f"Overriding shutter_speed from config file to: {shutter_speed}")
    
           elif stripped_spline[0] == 'ISO':
               ISO = int(stripped_spline[1])
-              print (f"Overriding ISO from config file to: {ISO}") 
 
 ######## End of parameter file read ###########
 
@@ -115,11 +106,12 @@ tag_ss = str(round(shutter_speed/1000000, 2))
 run_start_time = time.time()
 print ("run_start_time = " + str(run_start_time))
 
+start_of_run_time = strftime("%H%M%S", gmtime())
+print(f"Start of run time = {start_of_run_time}")
 
 
 version_dir = os.listdir("/home/pi/Tools/Version")
 if len(version_dir) == 0: 
-   print("Empty directory using UNK")
    version = 'UNK'
    #os.system('touch {}'.format("/home/pi/Tools/Version/UNK"))
 else:
@@ -127,7 +119,6 @@ else:
 
 logfile = open("/home/pi/Tools/Camera/gonet.log","a+")
 logfile.write("run_start_time = " + str(run_start_time) + "\n")
-#logfile.write("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S") + "\n")
 
 #print ("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S"))
 
@@ -223,8 +214,6 @@ def get_exif_long_dir(longitude):
 ##### Start of main program #####
 #################################
 
-print(f"free disk space = {(round(disk_stat('/'),2))}%")
-print()
 if (disk_stat('/')) < 10:
   print("exitng due to full disk")
   os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Disk_Full; crontab -r) &")
@@ -234,14 +223,11 @@ print(f"version: {version} config: {ifname} ISO: {ISO} speed: {shutter_speed} im
 
 
 gps_mode = GPSFix.GPSMode
-#gps_sats = GPSFix.GPSSats
 latitude = GPSFix.GPSLat
 longitude = GPSFix.GPSLong
 altitude = GPSFix.GPSAlt
 
 print (f"gps_mode: {GPSFix.GPSMode} lat: {GPSFix.GPSLat} long: {GPSFix.GPSLong} alt: {GPSFix.GPSAlt}")
-print()
-
 
 exif_latitude = convert_gps_lat_to_exif_lat(latitude)
 print(f"exif_latitude = {exif_latitude}")
@@ -260,8 +246,6 @@ img = Image.new('RGB', (3040, 60), color=(0,0,0))
 font = ImageFont.truetype("/home/pi/Tools/Camera/dejavu/DejaVuSans-Bold.ttf",40)
 d = ImageDraw.Draw(img)
 
-
-print (version)
 
 # White Text
 image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(longitude))} {get_exif_long_dir(longitude)} {altitude} M")
@@ -317,10 +301,7 @@ Alt: {altitude}\
 
 camera.exif_tags['IFD0.Artist'] = adler_exif_tags 
 
-start_of_run_time = strftime("%H%M%S", gmtime())
-print(f"Start of run time = {start_of_run_time}")
 
-#for x in range(5):
 for x in range(number_of_images):
    #filename = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_%H%M%S_%s", gmtime()))  + ".jpg"
    filename = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_", gmtime()))  + start_of_run_time + (strftime("_%s", gmtime())) + ".jpg"
