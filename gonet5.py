@@ -18,24 +18,20 @@ from datetime import datetime
 import math
 #from pysolar.solar import * 
 #import pytz
-import fetch_gps
+sys.path.insert(0, '/home/pi/Tools/FetchGPS')
 import GPSFix
 
 from picamera import PiCamera
 PiCamera.CAPTURE_TIMEOUT = 600
-#print(PiCamera.CAPTURE_TIMEOUT)
 from time import sleep
 from fractions import Fraction
 
-#import set_system_time_from_gps
 
 ### Start of hard coded image parameters 
 
 # shutter speed (exposure time) in microseconds
 shutter_speed = 6000000
 
-#tag_raspistill_ss = str(round(raspistill_ss/1000000, 2))
-#tag_raspistill_ss = str(round(shutter_speed/1000000, 2))
 
 # Number of images
 number_of_images = 5
@@ -120,9 +116,17 @@ run_start_time = time.time()
 print ("run_start_time = " + str(run_start_time))
 
 
+
+version_dir = os.listdir("/home/pi/Tools/Version")
+if len(version_dir) == 0: 
+   print("Empty directory using UNK")
+   version = 'UNK'
+   #os.system('touch {}'.format("/home/pi/Tools/Version/UNK"))
+else:
+   version  = ''.join(glob.glob(os.path.join('/home/pi/Tools/Version', '*'))).split("/")[5]
+
 logfile = open("/home/pi/Tools/Camera/gonet.log","a+")
 logfile.write("run_start_time = " + str(run_start_time) + "\n")
-#now = datetime.now()
 #logfile.write("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S") + "\n")
 
 #print ("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S"))
@@ -204,7 +208,7 @@ def convert_gps_long_to_exif_long(longitude):
 # West, South are negative
 
 def get_exif_lat_dir(latitude):
-    if latitude > 0:
+    if latitude >= 0:
        return "N"
     elif latitude < 0:
        return "S"
@@ -213,31 +217,29 @@ def get_exif_lat_dir(latitude):
 def get_exif_long_dir(longitude):
     if longitude > 0:
        return "E"
-    elif longitude < 0:
+    elif longitude <= 0:
        return "W"
 #################################
 ##### Start of main program #####
 #################################
 
-print("free disk space = " + str(round(disk_stat('/'),2)) + "%")
+print(f"free disk space = {(round(disk_stat('/'),2))}%")
 print()
 if (disk_stat('/')) < 10:
   print("exitng due to full disk")
   os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Disk_Full; crontab -r) &")
   exit()
 
+print(f"version: {version} config: {ifname} ISO: {ISO} speed: {shutter_speed} images: {number_of_images} free disk space: {(round(disk_stat('/'),2))}") 
 
-gps_mode = fetch_gps.GPSMode
-gps_sats = fetch_gps.GPSSats
-latitude = fetch_gps.GPSLat
-longitude = fetch_gps.GPSLong
-altitude = fetch_gps.GPSAlt
 
-print (f"gps_mode: {fetch_gps.GPSMode}")
-print (f"gps_sats: {fetch_gps.GPSSats}")
-print (f"lat: {fetch_gps.GPSLat}")
-print (f"long: {fetch_gps.GPSLong}")
-print (f"alt: {fetch_gps.GPSAlt}")
+gps_mode = GPSFix.GPSMode
+#gps_sats = GPSFix.GPSSats
+latitude = GPSFix.GPSLat
+longitude = GPSFix.GPSLong
+altitude = GPSFix.GPSAlt
+
+print (f"gps_mode: {GPSFix.GPSMode} lat: {GPSFix.GPSLat} long: {GPSFix.GPSLong} alt: {GPSFix.GPSAlt}")
 print()
 
 
@@ -248,14 +250,8 @@ print(f"exif_longitude = {exif_longitude}")
 
 ##### Imaging begins here! #####
 
-#start_create_image_tag_time = time.time()
-#gps_string_manipulation = str(start_create_image_tag_time - start_GPS_string_manipulation_time)
-#print ("gps_string_manipulation = " + gps_string_manipulation)
-#logfile.write("gps_string_manipulation = " + gps_string_manipulation + "\n")
 
 #Create image of a rectangle for text background
-#img = Image.new('RGB', (1944, 120), color=(255,255,255))
-#img = Image.new('RGB', (1944, 120), color=(0,0,0))
 img = Image.new('RGB', (3040, 60), color=(0,0,0))
      
      
@@ -265,16 +261,6 @@ font = ImageFont.truetype("/home/pi/Tools/Camera/dejavu/DejaVuSans-Bold.ttf",40)
 d = ImageDraw.Draw(img)
 
 
-
-version_dir = os.listdir("/home/pi/Tools/Version")
-#print(version_dir)
-#print (len(version_dir))
-if len(version_dir) == 0: 
-   print("Empty directory using UNK")
-   version = 'UNK'
-   #os.system('touch {}'.format("/home/pi/Tools/Version/UNK"))
-else:
-   version  = ''.join(glob.glob(os.path.join('/home/pi/Tools/Version', '*'))).split("/")[5]
 print (version)
 
 # White Text
@@ -282,7 +268,6 @@ image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(lo
 d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_ss + "s"\
 + " ISO: " + str(ISO) + " " + strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
 
-#d.text((20,10), "The tag needs work   "  , font=font, fill=(255,255,255))
 img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
 
      
@@ -303,18 +288,13 @@ camera = PiCamera(sensor_mode=3)
 sleep(1)
 # Set a framerate of 1/6fps, then set shutter
 # speed to 6s and ISO to 800
-#camera.framerate = Fraction(1, 6)
 camera.framerate_range = (Fraction(1,100), Fraction(1,2)) 
-#camera.shutter_speed = raspistill_ss
 camera.shutter_speed = shutter_speed
 camera.iso = ISO
 camera.drc_strength=drc
-#camera.awb_mode = awb
-#camera.awb_gains = (3.3476,1.5936)
 camera.awb_gains = white_balance_gains
 camera.brightness = br
 camera.still_stats = True
-#camera.resolution = (2592, 1944)
 camera.resolution = (4056, 3040)
 
 
