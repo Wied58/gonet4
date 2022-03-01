@@ -17,7 +17,7 @@ from collections import deque
 from datetime import datetime
 import math
 sys.path.insert(0, '/home/pi/Tools/FetchGPS')
-import GPSFix
+import FetchGPS
 
 from picamera import PiCamera
 PiCamera.CAPTURE_TIMEOUT = 600
@@ -103,10 +103,10 @@ if  len(sys.argv) >1:
 
 tag_ss = str(round(shutter_speed/1000000, 2))
 
-run_start_time = time.time()
-print ("run_start_time = " + str(run_start_time))
+#run_start_time = time.time()
+#print ("run_start_time = " + str(run_start_time))
 
-start_of_run_time = strftime("%H%M%S", gmtime())
+start_of_run_time = strftime("%Y %m %d %H:%M:%S", gmtime())
 print(f"Start of run time = {start_of_run_time}")
 
 
@@ -118,7 +118,7 @@ else:
    version  = ''.join(glob.glob(os.path.join('/home/pi/Tools/Version', '*'))).split("/")[5]
 
 logfile = open("/home/pi/Tools/Camera/gonet.log","a+")
-logfile.write("run_start_time = " + str(run_start_time) + "\n")
+#logfile.write("run_start_time = " + str(run_start_time) + "\n")
 
 #print ("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S"))
 
@@ -177,9 +177,9 @@ def convert_gps_lat_to_exif_lat(latitude):
      mnt = int(round(mnt,0))
      sec = int(round(sec,0))
 
-     print (f"lat_deg: {deg}, lat_min: {mnt}, lat_sec: {sec}")
+     #print (f"lat_deg: {deg}, lat_min: {mnt}, lat_sec: {sec}")
      return (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
-     print (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
+     #print (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
 
 
 def convert_gps_long_to_exif_long(longitude):
@@ -191,9 +191,9 @@ def convert_gps_long_to_exif_long(longitude):
      mnt = int(round(mnt,0))
      sec = int(round(sec,0))
 
-     print (f"long_deg: {deg}, long_min: {mnt}, long_sec: {sec}")
+     #print (f"long_deg: {deg}, long_min: {mnt}, long_sec: {sec}")
      return (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
-     print (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
+     #print (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
 
 
 # West, South are negative
@@ -222,17 +222,17 @@ if (disk_stat('/')) < 10:
 print(f"version: {version} config: {ifname} ISO: {ISO} speed: {shutter_speed} images: {number_of_images} free disk space: {(round(disk_stat('/'),2))}") 
 
 
-gps_mode = GPSFix.GPSMode
-latitude = GPSFix.GPSLat
-longitude = GPSFix.GPSLong
-altitude = GPSFix.GPSAlt
 
-print (f"gps_mode: {GPSFix.GPSMode} lat: {GPSFix.GPSLat} long: {GPSFix.GPSLong} alt: {GPSFix.GPSAlt}")
+gps_mode = FetchGPS.GPSMode
+latitude = FetchGPS.GPSLat
+longitude = FetchGPS.GPSLong
+altitude = FetchGPS.GPSAlt
+
+print (f"gps_mode: {FetchGPS.GPSMode} lat: {FetchGPS.GPSLat} long: {FetchGPS.GPSLong} alt: {FetchGPS.GPSAlt}")
 
 exif_latitude = convert_gps_lat_to_exif_lat(latitude)
-print(f"exif_latitude = {exif_latitude}")
 exif_longitude = convert_gps_long_to_exif_long(longitude)
-print(f"exif_longitude = {exif_longitude}")
+print(f"exif_latitude = {exif_latitude} exif_longitude = {exif_longitude}")
 
 ##### Imaging begins here! #####
 
@@ -367,6 +367,7 @@ for filename in os.listdir(scratch_dir):
    ##### End of .jpg if
 ##### End of filename in directory for
 print ("photo_count = " + str(photo_count))
+print()
 logfile.write("photo_count = " + str(photo_count) + "\n")
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Ready) &")
