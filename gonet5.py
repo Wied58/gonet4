@@ -1,6 +1,7 @@
-#i!/usr/bin/python3
+#!/usr/bin/python3
 
-
+import time
+start_time = time.time()
 
 import serial
 import subprocess
@@ -8,7 +9,6 @@ import socket
 import os
 import sys
 import shutil
-import time
 from time import gmtime, strftime
 from PIL import Image, ImageDraw, ImageFont, ExifTags
 import glob
@@ -116,8 +116,7 @@ os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/CreateDi
 
 tag_ss = str(round(shutter_speed/1000000, 2))
 
-run_start_time = time.time()
-#print ("run_start_time = " + str(run_start_time))
+#run_start_time = time.time()
 
 start_of_run_time = strftime("%Y %m %d %H:%M:%S", gmtime())
 print(f"Start of run time = {start_of_run_time}")
@@ -130,10 +129,6 @@ if len(version_dir) == 0:
 else:
    version  = ''.join(glob.glob(os.path.join('/home/pi/Tools/Version', '*'))).split("/")[5]
 
-logfile = open("/home/pi/Tools/Camera/gonet.log","a+")
-#logfile.write("run_start_time = " + str(run_start_time) + "\n")
-
-#print ("run_start_time = " + now.strftime("%m/%d/%Y, %H:%M:%S"))
 
 scratch_dir = "/home/pi/Tools/Camera/scratch/"
 if not os.path.exists(scratch_dir):
@@ -152,7 +147,6 @@ if not os.path.exists(thumbs_dir):
 for filename in os.listdir(scratch_dir):
    if os.path.getsize(scratch_dir + filename) == 0:
      print("Deleting zero length file " + scratch_dir +  filename)
-     logfile.write(("Deleting zero length file " + scratch_dir +  filename) + "\n")
      os.remove(scratch_dir + filename)
 
 
@@ -161,12 +155,9 @@ for filename in os.listdir(scratch_dir):
 for filename in os.listdir(scratch_dir):
     if filename.endswith(".jpg"):
       print("Moving " + scratch_dir +  filename + " to " + image_dir + filename)
-      logfile.write(("Moving " + scratch_dir +  filename + " to " + image_dir + filename)  + "\n")
       os.rename(scratch_dir + filename, image_dir + filename)
 
 
-#run_start_time = time.time()
-#print ("run_start_time = " + str(run_start_time))
 
 
 
@@ -271,11 +262,6 @@ img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
 # take a picture with pi cam!
 
 
-#start_imaging_time = time.time()
-#create_image_tag = str(start_imaging_time - start_create_image_tag_time)
-#print ("create_image_tag = " + create_image_tag)
-#logfile.write("create_image_tag = " + create_image_tag + "\n")
-
 
 
 
@@ -284,8 +270,6 @@ img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Imaging) &")
 
 start_imaging = time.time()
-#gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
-#print(f"gps_acquire_time = {gps_acquire_time}")
 
 camera = PiCamera(sensor_mode=3)
 sleep(1)
@@ -345,9 +329,6 @@ print(f"imaging_time = {imaging_time}")
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Post) &")
 
 start_post = time.time()
-#imaging_time = str(start_post_processing_time - start_imaging_time)
-#print ("imaging_time = " + imaging_time)
-#logfile.write("imaging_time = " + imaging_time + "\n")
 
 photo_count = 0 
 #post processing
@@ -356,8 +337,6 @@ for filename in os.listdir(scratch_dir):
    if filename.endswith(".jpg"):
      sfilename = filename.split("_")
      print (scratch_dir + filename)
-     logfile.write(scratch_dir + filename + "\n")
-     #logfile.write(scratch_dir + filename + "\n")
 
      # open the the image from pi cam
      background = Image.open(scratch_dir + filename).convert("RGB")
@@ -398,33 +377,33 @@ print(f"post_time = {post_time}")
 ##### End of filename in directory for
 print ("photo_count = " + str(photo_count))
 print()
-logfile.write("photo_count = " + str(photo_count) + "\n")
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Ready) &")
 
 
 
-#finish_time = time.time()
-#post_processing_time = str(finish_time - start_post_processing_time)
-#print ("post_processing_time = " + post_processing_time)
-#logfile.write("post_processing_time = " + post_processing_time + "\n")
+finish_time = time.time()
 
 
 
-#total_run_time = str(finish_time - run_start_time)
-#print ("total_time = " + total_run_time)
-#logfile.write("total_time = " + total_run_time + "\n")
-#
-#print ("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count))
-#print ("")
-#
-##logfile.write("perf," + str(run_start_time) + "," + setup_time + "," + gps_aquisition + "," + gps_string_manipulation + "," + create_image_tag + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(gps_flag) + "," + str(photo_count) + "\n")
-#logfile.write("perf," + now.strftime("%m/%d/%Y, %H:%M:%S") + "," + ifname + "," + imaging_time + "," + post_processing_time + "," + total_run_time + "," + str(photo_count) + "\n")
-#logfile.write("\n")
-#
-logfile.flush()
-logfile.close()
-#
+total_run_time = str(finish_time - start_time)
+
+
+
+
+
+
+
+
+print(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}")
+
+
+
+
+
+
+
+
 #with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
 #    fout.writelines(deque(fin, 10000))
 #os.remove("/home/pi/Tools/Camera/gonet.log")
