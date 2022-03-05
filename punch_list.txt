@@ -4,23 +4,25 @@
    - GPS
    - Performance
 
-* If gps fix not available
 
 * Interface with Laris
 
 * refactor old stuff for f-strings
 
-* inform people of test.cfg
+* New module pytz, pysolar
 
-x Put ALT in image tag
+* rc.local - bombing if do not exist
 
-* do we collect Sunrise/Sunset data on startup, or with the image cycle
+* UNK is also in gonetX.py
 
-* where to place next Sunrise/Sunset test
 
-* How to communicate next Sunrise/Sunset data
+* need to set up systime from gps
 
-* look into gpsd age
+* 
+
+
+
+
 
 
 ***********************************
@@ -29,12 +31,10 @@ Punted problems
 
 * Altitude is not accutratly making into image exif
 
-* Sat count not working
 
 ***********************************
 
 Items for discussion
 
-* Can we use one of the exif free text fields - software, or author - for a csv string of the meta data as we would like to load in into Dynamo DB?
 
 

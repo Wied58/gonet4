@@ -16,8 +16,21 @@ import re
 from collections import deque
 from datetime import datetime
 import math
+open('/home/pi/Tools/Camera/Search GPS', 'a').close()
 sys.path.insert(0, '/home/pi/Tools/FetchGPS')
+
+
+os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/FetchGPS) &")
+
+start_acquire_gps_time = time.time()
 import FetchGPS
+open('/home/pi/Tools/Camera/Done_for_GPS', 'a').close()
+end_acquire_gps_time = time.time()
+gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
+print(f"gps_acquire_time = {gps_acquire_time}")
+
+
+os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Param) &")
 
 from picamera import PiCamera
 PiCamera.CAPTURE_TIMEOUT = 600
@@ -99,11 +112,11 @@ if  len(sys.argv) >1:
 
 ######## End of parameter file read ###########
 
-
+os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/CreateDirs) &")
 
 tag_ss = str(round(shutter_speed/1000000, 2))
 
-#run_start_time = time.time()
+run_start_time = time.time()
 #print ("run_start_time = " + str(run_start_time))
 
 start_of_run_time = strftime("%Y %m %d %H:%M:%S", gmtime())
@@ -268,6 +281,12 @@ img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
 
 ########### Start of picamera ##############
 
+os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Imaging) &")
+
+start_imaging = time.time()
+#gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
+#print(f"gps_acquire_time = {gps_acquire_time}")
+
 camera = PiCamera(sensor_mode=3)
 sleep(1)
 # Set a framerate of 1/6fps, then set shutter
@@ -317,9 +336,15 @@ for x in range(number_of_images):
 print("Closing Camera")
 camera.close()
 
+end_imaging = time.time()
+imaging_time = end_imaging - start_imaging
+print(f"imaging_time = {imaging_time}")
+
 ######### End of picamera ###########
 
-#start_post_processing_time = time.time()
+os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Post) &")
+
+start_post = time.time()
 #imaging_time = str(start_post_processing_time - start_imaging_time)
 #print ("imaging_time = " + imaging_time)
 #logfile.write("imaging_time = " + imaging_time + "\n")
@@ -365,6 +390,11 @@ for filename in os.listdir(scratch_dir):
      os.remove(scratch_dir + filename)
      photo_count += 1
    ##### End of .jpg if
+
+end_post = time.time()
+post_time = end_post - start_post
+print(f"post_time = {post_time}")
+
 ##### End of filename in directory for
 print ("photo_count = " + str(photo_count))
 print()
@@ -399,3 +429,4 @@ logfile.close()
 #    fout.writelines(deque(fin, 10000))
 #os.remove("/home/pi/Tools/Camera/gonet.log")
 #os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")
+os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Ready) &")
