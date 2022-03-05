@@ -378,31 +378,11 @@ print(f"post_time = {post_time}")
 print ("photo_count = " + str(photo_count))
 print()
 
-os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Ready) &")
-
-
 
 finish_time = time.time()
-
-
-
 total_run_time = str(finish_time - start_time)
 
-
-
-
-
-
-
-
 print(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}")
-
-
-
-
-
-
-
 
 #with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
 #    fout.writelines(deque(fin, 10000))
