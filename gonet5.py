@@ -118,8 +118,8 @@ tag_ss = str(round(shutter_speed/1000000, 2))
 
 #run_start_time = time.time()
 
-start_of_run_time = strftime("%Y %m %d %H:%M:%S", gmtime())
-print(f"Start of run time = {start_of_run_time}")
+start_of_run_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+print(f"Start_of_run_time = {start_of_run_time}")
 
 
 version_dir = os.listdir("/home/pi/Tools/Version")
@@ -223,7 +223,8 @@ if (disk_stat('/')) < 10:
   os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Disk_Full; crontab -r) &")
   exit()
 
-print(f"version: {version} config: {ifname} ISO: {ISO} speed: {shutter_speed} images: {number_of_images} free disk space: {(round(disk_stat('/'),2))}") 
+camera_parameters = (f"version: {version}, config: {ifname}, ISO: {ISO}, speed: {shutter_speed}, images: {number_of_images}, free disk space: {(round(disk_stat('/'),2))}") 
+print(camera_parameters)
 
 
 
@@ -232,11 +233,13 @@ latitude = FetchGPS.GPSLat
 longitude = FetchGPS.GPSLong
 altitude = FetchGPS.GPSAlt
 
-print (f"gps_mode: {FetchGPS.GPSMode} lat: {FetchGPS.GPSLat} long: {FetchGPS.GPSLong} alt: {FetchGPS.GPSAlt}")
+gps_data = (f"gps_mode: {FetchGPS.GPSMode}, lat: {FetchGPS.GPSLat}, long: {FetchGPS.GPSLong}, alt: {FetchGPS.GPSAlt}")
+print(gps_data)
 
 exif_latitude = convert_gps_lat_to_exif_lat(latitude)
 exif_longitude = convert_gps_long_to_exif_long(longitude)
-print(f"exif_latitude = {exif_latitude} exif_longitude = {exif_longitude}")
+exif_gps_data =(f"exif_latitude: {exif_latitude}, exif_longitude: {exif_longitude}")
+print(exif_gps_data)
 
 ##### Imaging begins here! #####
 
@@ -384,10 +387,19 @@ total_run_time = str(finish_time - start_time)
 
 print(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}")
 
-#with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
-with open('/home/pi/Tools/Camera/gonet.log', 'w') as fout:
+with open('/home/pi/Tools/Camera/gonet.log', 'a') as fout:
+    fout.write(f"Start_of_run_time = {start_of_run_time}")
     fout.write(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}\n")
-#    fout.writelines(deque(fin, 10000))
-#os.remove("/home/pi/Tools/Camera/gonet.log")
-#os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")
+    fout.write(f"{camera_parameters}\n")
+    fout.write(f"{gps_data}\n")
+    fout.write(f"{exif_gps_data}\n")
+    fout.write(f"\n")
+
+
+with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
+    fout.writelines(deque(fin, 10000))
+os.remove("/home/pi/Tools/Camera/gonet.log")
+os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")
+
+
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Ready) &")
