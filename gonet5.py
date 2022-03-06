@@ -385,6 +385,8 @@ total_run_time = str(finish_time - start_time)
 print(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}")
 
 #with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
+with open('/home/pi/Tools/Camera/gonet.log', 'w') as fout:
+    fout.write(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}\n")
 #    fout.writelines(deque(fin, 10000))
 #os.remove("/home/pi/Tools/Camera/gonet.log")
 #os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")
