@@ -400,11 +400,13 @@ with open('/home/pi/Tools/Camera/gonet.log', 'a') as fout:
          fout.write(f"{filenames[x]}\n")
     fout.write(f"\n")
 
-
-with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
-    fout.writelines(deque(fin, 10000))
-os.remove("/home/pi/Tools/Camera/gonet.log")
-os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")
+with open('/home/pi/Tools/Camera/gonet.log') as foo:
+    if = len(foo.readlines()) > 10:
+ 
+         with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
+             fout.writelines(deque(fin, 5))
+         os.remove("/home/pi/Tools/Camera/gonet.log")
+         os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")
 
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Ready) &")
