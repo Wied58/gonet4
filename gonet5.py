@@ -392,19 +392,19 @@ print()
 
 with open('/home/pi/Tools/Camera/gonet.log', 'a') as fout:
     fout.write(f"Start_of_run_time = {log_start_of_run_time}\n")
-    fout.write(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}\n")
-    fout.write(f"{camera_parameters}\n")
-    fout.write(f"{gps_data}\n")
+    fout.write(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}, ")
+    fout.write(f"{log_start_of_run_time} {camera_parameters}, ")
+    fout.write(f"{log_start_of_run_time} {gps_data}\n")
     fout.write(f"{exif_gps_data}\n")
     for x in range(0, photo_count):
          fout.write(f"{filenames[x]}\n")
     fout.write(f"\n")
 
 with open('/home/pi/Tools/Camera/gonet.log') as foo:
-    if = len(foo.readlines()) > 10:
+    if len(foo.readlines()) > 6000:
  
          with open('/home/pi/Tools/Camera/gonet.log') as fin, open('/home/pi/Tools/Camera/temp_gonet.log', 'w') as fout:
-             fout.writelines(deque(fin, 5))
+             fout.writelines(deque(fin, 5000))
          os.remove("/home/pi/Tools/Camera/gonet.log")
          os.rename("/home/pi/Tools/Camera/temp_gonet.log","/home/pi/Tools/Camera/gonet.log")
 
