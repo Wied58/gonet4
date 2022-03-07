@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import time
-start_time = time.time()
+start_time = time.perf_counter()
 
 import serial
 import subprocess
@@ -22,10 +22,10 @@ sys.path.insert(0, '/home/pi/Tools/FetchGPS')
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/FetchGPS) &")
 
-start_acquire_gps_time = time.time()
+start_acquire_gps_time = time.perf_counter()
 import FetchGPS
 open('/home/pi/Tools/Camera/Done_for_GPS', 'a').close()
-end_acquire_gps_time = time.time()
+end_acquire_gps_time = time.perf_counter()
 gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
 print(f"gps_acquire_time = {gps_acquire_time}")
 
@@ -116,7 +116,7 @@ os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/CreateDi
 
 tag_ss = str(round(shutter_speed/1000000, 2))
 
-#run_start_time = time.time()
+#run_start_time = time.perf_counter()
 
 start_of_run_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
 print(f"Start_of_run_time = {start_of_run_time}")
@@ -223,7 +223,7 @@ if (disk_stat('/')) < 10:
   os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Disk_Full; crontab -r) &")
   exit()
 
-camera_parameters = (f"version: {version}, config: {ifname}, ISO: {ISO}, speed: {shutter_speed}, images: {number_of_images}, free disk space: {(round(disk_stat('/'),2))}") 
+camera_parameters = (f"version: {version}, config: {ifname}, ISO: {ISO}, speed: {shutter_speed}, images: {number_of_images}, free disk space: {(round(disk_stat('/'),2))} GB") 
 print(camera_parameters)
 
 
@@ -272,7 +272,7 @@ img.rotate(90,expand = True).save(scratch_dir + 'foreground.jpeg', 'JPEG')
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Imaging) &")
 
-start_imaging = time.time()
+start_imaging = time.perf_counter()
 
 camera = PiCamera(sensor_mode=3)
 sleep(1)
@@ -323,7 +323,7 @@ for x in range(number_of_images):
 print("Closing Camera")
 camera.close()
 
-end_imaging = time.time()
+end_imaging = time.perf_counter()
 imaging_time = end_imaging - start_imaging
 print(f"imaging_time = {imaging_time}")
 
@@ -331,7 +331,7 @@ print(f"imaging_time = {imaging_time}")
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Post) &")
 
-start_post = time.time()
+start_post = time.perf_counter()
 
 photo_count = 0 
 #post processing
@@ -373,19 +373,19 @@ for filename in os.listdir(scratch_dir):
      photo_count += 1
    ##### End of .jpg if
 
-end_post = time.time()
+end_post = time.perf_counter()
 post_time = end_post - start_post
 print(f"post_time = {post_time}")
 
 ##### End of filename in directory for
 print ("photo_count = " + str(photo_count))
-print()
 
 
-finish_time = time.time()
+finish_time = time.perf_counter()
 total_run_time = str(finish_time - start_time)
 
 print(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}")
+print()
 
 with open('/home/pi/Tools/Camera/gonet.log', 'a') as fout:
     fout.write(f"Start_of_run_time = {start_of_run_time}")
