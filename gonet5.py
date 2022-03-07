@@ -376,6 +376,8 @@ for filename in os.listdir(scratch_dir):
      photo_count += 1
    ##### End of .jpg if
 print(f"filenames: {filenames}")
+print(f"filenames_len: {len(filenames)}")
+
 end_post = time.perf_counter()
 post_time = end_post - start_post
 print(f"post_time = {post_time}")
@@ -396,7 +398,7 @@ with open('/home/pi/Tools/Camera/gonet.log', 'a') as fout:
     fout.write(f"{log_start_of_run_time} {camera_parameters}, ")
     fout.write(f"{log_start_of_run_time} {gps_data}\n")
     fout.write(f"{exif_gps_data}\n")
-    for x in range(0, photo_count):
+    for x in range(0, len(filenames)):
          fout.write(f"{filenames[x]}\n")
     fout.write(f"\n")
 
