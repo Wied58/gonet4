@@ -118,8 +118,10 @@ tag_ss = str(round(shutter_speed/1000000, 2))
 
 #run_start_time = time.perf_counter()
 
-start_of_run_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-print(f"Start_of_run_time = {start_of_run_time}")
+#249_220226_192746_1645903666.jpg
+log_start_of_run_time = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+start_of_run_time = strftime("%H%M%S", gmtime())
+print(f"Start_of_run_time = {log_start_of_run_time}")
 
 
 version_dir = os.listdir("/home/pi/Tools/Version")
@@ -335,12 +337,13 @@ start_post = time.perf_counter()
 
 photo_count = 0 
 #post processing
+filenames = []
 #for filename in os.listdir("/home/pi/gonet3/scratch/"):
 for filename in os.listdir(scratch_dir):
    if filename.endswith(".jpg"):
      sfilename = filename.split("_")
      print (scratch_dir + filename)
-
+     filenames.append(filename)
      # open the the image from pi cam
      background = Image.open(scratch_dir + filename).convert("RGB")
 
@@ -372,13 +375,13 @@ for filename in os.listdir(scratch_dir):
      os.remove(scratch_dir + filename)
      photo_count += 1
    ##### End of .jpg if
-
+print(f"filenames: {filenames}")
 end_post = time.perf_counter()
 post_time = end_post - start_post
 print(f"post_time = {post_time}")
 
 ##### End of filename in directory for
-print ("photo_count = " + str(photo_count))
+print (f"photo_count: {photo_count}")
 
 
 finish_time = time.perf_counter()
@@ -388,11 +391,13 @@ print(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, 
 print()
 
 with open('/home/pi/Tools/Camera/gonet.log', 'a') as fout:
-    fout.write(f"Start_of_run_time = {start_of_run_time}")
+    fout.write(f"Start_of_run_time = {log_start_of_run_time}\n")
     fout.write(f"total_run_time: {total_run_time}, gps_acquire_time: {gps_acquire_time}, imaging_time: {imaging_time}, post_time: {post_time}\n")
     fout.write(f"{camera_parameters}\n")
     fout.write(f"{gps_data}\n")
     fout.write(f"{exif_gps_data}\n")
+    for x in range(0, photo_count):
+         fout.write(f"{filenames[x]}\n")
     fout.write(f"\n")
 
 
