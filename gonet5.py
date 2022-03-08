@@ -145,17 +145,19 @@ if not os.path.exists(thumbs_dir):
     os.makedirs(thumbs_dir)
 
 # remove  any zero length file from scratch dir
-
+zero_length = []
 for filename in os.listdir(scratch_dir):
    if os.path.getsize(scratch_dir + filename) == 0:
      print("Deleting zero length file " + scratch_dir +  filename)
+     zero_length.append(filename)
      os.remove(scratch_dir + filename)
 
 
 # move any reaming jpg files to image dir
-
+unprocessed = []
 for filename in os.listdir(scratch_dir):
     if filename.endswith(".jpg"):
+      unprocessed.append(filename)
       print("Moving " + scratch_dir +  filename + " to " + image_dir + filename)
       os.rename(scratch_dir + filename, image_dir + filename)
 
@@ -399,7 +401,16 @@ with open('/home/pi/Tools/Camera/gonet.log', 'a') as fout:
     fout.write(f"{log_start_of_run_time} {gps_data}\n")
     fout.write(f"{exif_gps_data}\n")
     for x in range(0, len(filenames)):
-         fout.write(f"{filenames[x]}\n")
+         fout.write(f"processed_file: {filenames[x]}\n")
+
+    if len(zero_length) > 0:
+        for x in range(0, len(zero_length)):
+            fout.write(f"removing_zero_length_file: {zero_length[x]}\n")
+
+    if len(unprocessed) > 0:
+        for x in range(0, len(unprocessed)):
+            fout.write(f"moving_unprocessed_file: {unprocessed[x]}\n")
+        fout.write(f"\n")
     fout.write(f"\n")
 
 with open('/home/pi/Tools/Camera/gonet.log') as foo:
