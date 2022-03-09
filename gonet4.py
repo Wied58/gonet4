@@ -163,9 +163,6 @@ for filename in os.listdir(scratch_dir):
 
 
 
-
-
-
 ###############################
 ##### Start of functions  #####
 ###############################
@@ -189,7 +186,6 @@ def convert_gps_lat_to_exif_lat(latitude):
      return (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
      #print (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
 
-
 def convert_gps_long_to_exif_long(longitude):
      longitude = abs(longitude)
      mnt,sec = divmod(longitude*3600,60)
@@ -202,7 +198,6 @@ def convert_gps_long_to_exif_long(longitude):
      #print (f"long_deg: {deg}, long_min: {mnt}, long_sec: {sec}")
      return (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
      #print (f"{str(deg)}/1,{str(mnt)}/1,{str(sec)}/1")
-
 
 # West, South are negative
 
@@ -218,6 +213,7 @@ def get_exif_long_dir(longitude):
        return "E"
     elif longitude <= 0:
        return "W"
+
 #################################
 ##### Start of main program #####
 #################################
