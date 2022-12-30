@@ -214,6 +214,13 @@ def get_exif_long_dir(longitude):
     elif longitude <= 0:
        return "W"
 
+def convert_gps_alt_to_exif_alt(altitude):
+    # Alt comes from the gps in the form xxx.xxx meters
+    # The exif requires a string in the format to be xxxxxx/1000
+    # We take the xxx.xxx and multiply that by 1000 and 
+    # convert that to whole number as a string and append /1000 
+    return (f"{str(int(altitude*1000))}/1000")
+
 #################################
 ##### Start of main program #####
 #################################
@@ -233,11 +240,13 @@ latitude = FetchGPS.GPSLat
 longitude = FetchGPS.GPSLong
 altitude = FetchGPS.GPSAlt
 
-gps_data = (f"gps_mode: {FetchGPS.GPSMode}, lat: {FetchGPS.GPSLat}, long: {FetchGPS.GPSLong}, alt: {FetchGPS.GPSAlt}")
+#gps_data = (f"gps_mode: {FetchGPS.GPSMode}, lat: {FetchGPS.GPSLat}, long: {FetchGPS.GPSLong}, alt: {FetchGPS.GPSAlt}")
+gps_data = (f"gps_mode: {gps_mode}, lat: {latitude}, long: {longitude}, alt: {altitude}")
 print(gps_data)
 
 exif_latitude = convert_gps_lat_to_exif_lat(latitude)
 exif_longitude = convert_gps_long_to_exif_long(longitude)
+exif_altitude = convert_gps_alt_to_exif_alt(altitude)
 exif_gps_data =(f"exif_latitude: {exif_latitude}, exif_longitude: {exif_longitude}")
 print(exif_gps_data)
 
@@ -292,7 +301,12 @@ camera.exif_tags['GPS.GPSLongitude'] = exif_longitude
 camera.exif_tags['GPS.GPSLongitudeRef'] = get_exif_long_dir(longitude)
 camera.exif_tags['GPS.GPSLatitude'] = exif_latitude 
 camera.exif_tags['GPS.GPSLatitudeRef'] = get_exif_lat_dir(latitude)
-camera.exif_tags['GPS.GPSAltitude'] =  str(altitude)
+print(f"altitude = {altitude}")
+#exif_altitude = (f"{str(int(altitude*1000))}/1000")
+#print(f"exif_altitude = {exif_altitude}")
+#camera.exif_tags['GPS.GPSAltitude'] = (f"{str(altitude*1000)}/1000")
+camera.exif_tags['GPS.GPSAltitude'] = exif_altitude
+
 
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
 
