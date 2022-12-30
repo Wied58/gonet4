@@ -301,10 +301,6 @@ camera.exif_tags['GPS.GPSLongitude'] = exif_longitude
 camera.exif_tags['GPS.GPSLongitudeRef'] = get_exif_long_dir(longitude)
 camera.exif_tags['GPS.GPSLatitude'] = exif_latitude 
 camera.exif_tags['GPS.GPSLatitudeRef'] = get_exif_lat_dir(latitude)
-print(f"altitude = {altitude}")
-#exif_altitude = (f"{str(int(altitude*1000))}/1000")
-#print(f"exif_altitude = {exif_altitude}")
-#camera.exif_tags['GPS.GPSAltitude'] = (f"{str(altitude*1000)}/1000")
 camera.exif_tags['GPS.GPSAltitude'] = exif_altitude
 
 
