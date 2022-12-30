@@ -247,7 +247,7 @@ print(gps_data)
 exif_latitude = convert_gps_lat_to_exif_lat(latitude)
 exif_longitude = convert_gps_long_to_exif_long(longitude)
 exif_altitude = convert_gps_alt_to_exif_alt(altitude)
-exif_gps_data =(f"exif_latitude: {exif_latitude}, exif_longitude: {exif_longitude}")
+exif_gps_data =(f"exif_latitude: {exif_latitude}, exif_longitude: {exif_longitude}, exif_altitude: {exif_altitude}")
 print(exif_gps_data)
 
 ##### Imaging begins here! #####
