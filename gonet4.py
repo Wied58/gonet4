@@ -283,23 +283,28 @@ os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Imaging)
 
 start_imaging = time.perf_counter()
 
-camera = PiCamera(sensor_mode=3)
-sleep(1)
-# Set a framerate of 1/6fps, then set shutter
-# speed to 6s and ISO to 800
-camera.framerate_range = (Fraction(1,100), Fraction(1,2)) 
-camera.shutter_speed = shutter_speed
-camera.iso = ISO
-camera.drc_strength=drc
-camera.awb_gains = white_balance_gains
-camera.brightness = br
-camera.still_stats = True
-camera.resolution = (4056, 3040)
-# experiment to dump metering
-camera.exposure_mode = 'off'
-camera.stop_preview()
-camera.awb_mode = 'off'
+try:
 
+    camera = PiCamera(sensor_mode=3)
+    sleep(1)
+    # Set a framerate of 1/6fps, then set shutter
+    # speed to 6s and ISO to 800
+    camera.framerate_range = (Fraction(1,100), Fraction(1,2)) 
+    camera.shutter_speed = shutter_speed
+    camera.iso = ISO
+    camera.drc_strength=drc
+    camera.awb_gains = white_balance_gains
+    camera.brightness = br
+    camera.still_stats = True
+    camera.resolution = (4056, 3040)
+    # experiment to dump metering
+    camera.exposure_mode = 'off'
+    camera.stop_preview()
+    camera.awb_mode = 'off'
+
+except:
+    os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Camera_Error) &")
+    sys.exit() 
 
 camera.exif_tags['GPS.GPSLongitude'] = exif_longitude
 camera.exif_tags['GPS.GPSLongitudeRef'] = get_exif_long_dir(longitude)
