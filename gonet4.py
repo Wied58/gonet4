@@ -295,6 +295,10 @@ camera.awb_gains = white_balance_gains
 camera.brightness = br
 camera.still_stats = True
 camera.resolution = (4056, 3040)
+# experiment to dump metering
+camera.exposure_mode = 'off'
+camera.stop_preview()
+camera.awb_mode = 'off'
 
 
 camera.exif_tags['GPS.GPSLongitude'] = exif_longitude
@@ -323,6 +327,8 @@ for x in range(number_of_images):
    filename = socket.gethostname()[-3:] + "_" + (strftime("%y%m%d_", gmtime()))  + start_of_run_time + (strftime("_%s", gmtime())) + ".jpg"
    print(scratch_dir + filename)
    camera.capture(scratch_dir + filename, bayer=True)
+   # expoerment to dump metering
+   # camera.capture(scratch_dir + filename, bayer=True, use_video_port=True)
    #camera.capture("J_" + filename)
 
 #print("camera parameters")
