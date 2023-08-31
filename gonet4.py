@@ -315,13 +315,16 @@ camera.exif_tags['GPS.GPSAltitude'] = exif_altitude
 
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
 
+cap = os.listdir('/home/pi/Tools/LensStatus/Status')
+
 adler_exif_tags = (f"\
 Hostname: {socket.gethostname()}, \
 Version: {version}, \
 WB: {str(white_balance_gains)}, \
 Lat: {latitude}, \
 Long: {longitude}, \
-Alt: {altitude}\
+Alt: {altitude}, \
+Lenscap: {cap[0]}\
 ")
 
 camera.exif_tags['IFD0.Artist'] = adler_exif_tags 
