@@ -33,6 +33,7 @@ print(f"gps_acquire_time = {gps_acquire_time}")
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Param) &")
 
 from picamera import PiCamera
+print(f"PiCamera.CAPTURE_TIMEOUT = {PiCamera.CAPTURE_TIMEOUT}")
 PiCamera.CAPTURE_TIMEOUT = 600
 from time import sleep
 from fractions import Fraction
