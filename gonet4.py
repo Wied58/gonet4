@@ -75,42 +75,51 @@ if  len(sys.argv) >1:
 
    # Here is the important part! It takes that argument parameter and assigns to a variable name, or the file we will open
    ifname = sys.argv[1]
-   
-   # open the file config.txt file
-   with open(ifname) as params:
-   
-     #iterate (loop) through the lines of the file
-     for line in params:
-   
-   #   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, process it.  We'll talk about strip later
 
-       if line[0] != '#' and len(line.strip()) > 0: 
-   
-   #      We replace the newline \n, then split the line at the equal sign.
-          spline = line.replace('\n','').split('=')
-   #       print(spline)
-   
-   
-   #      Here we iterate, or loop, across the list, strip the spaces off the ends of the list elements
-          stripped_spline = [x.strip() for x in spline]
-   
-   #      Now we print the pieces, or elemments of the list.
-   
-   
-   #       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
-   #       we can start parsing the information into parameters to feed the camera.
-   
-   
-   
-          if stripped_spline[0] == 'number_of_images':
-              number_of_images = int(stripped_spline[1])
-   
-          elif stripped_spline[0] == 'shutter_speed':
-              shutter_speed = int(stripped_spline[1])
-   
-          elif stripped_spline[0] == 'ISO':
-              ISO = int(stripped_spline[1])
+   # if iname = manual prompt for varible input - else process file
 
+   if ifname.__eq__('manual'):
+
+      number_of_images = input("Please Enter Your Desired Number of Images: ")
+      shutter_speed = int(input("Please Enter Your Desired Shutter Speed in Microseconds: "))
+      ISO = input("Please Enter Your Desired ISO: ")
+
+   else:
+      # open the file config.txt file
+      with open(ifname) as params:
+      
+        #iterate (loop) through the lines of the file
+        for line in params:
+      
+      #   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, process it.  We'll talk about strip later
+   
+          if line[0] != '#' and len(line.strip()) > 0: 
+      
+      #      We replace the newline \n, then split the line at the equal sign.
+             spline = line.replace('\n','').split('=')
+      #       print(spline)
+      
+      
+      #      Here we iterate, or loop, across the list, strip the spaces off the ends of the list elements
+             stripped_spline = [x.strip() for x in spline]
+      
+      #      Now we print the pieces, or elemments of the list.
+      
+      
+      #       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
+      #       we can start parsing the information into parameters to feed the camera.
+      
+      
+      
+             if stripped_spline[0] == 'number_of_images':
+                 number_of_images = int(stripped_spline[1])
+      
+             elif stripped_spline[0] == 'shutter_speed':
+                 shutter_speed = int(stripped_spline[1])
+      
+             elif stripped_spline[0] == 'ISO':
+                 ISO = int(stripped_spline[1])
+   
 ######## End of parameter file read ###########
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/CreateDirs) &")
