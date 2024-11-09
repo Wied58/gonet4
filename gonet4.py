@@ -20,21 +20,13 @@ open('/home/pi/Tools/Camera/Search GPS', 'a').close()
 sys.path.insert(0, '/home/pi/Tools/FetchGPS')
 
 
-os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/FetchGPS) &")
-
-start_acquire_gps_time = time.perf_counter()
-import FetchGPS
-open('/home/pi/Tools/Camera/Done_for_GPS', 'a').close()
-end_acquire_gps_time = time.perf_counter()
-gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
-print(f"gps_acquire_time = {gps_acquire_time}")
-
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Param) &")
 
 from picamera import PiCamera
 print(f"PiCamera.CAPTURE_TIMEOUT = {PiCamera.CAPTURE_TIMEOUT}")
 PiCamera.CAPTURE_TIMEOUT = 600
+print(f"PiCamera.CAPTURE_TIMEOUT = {PiCamera.CAPTURE_TIMEOUT}")
 from time import sleep
 from fractions import Fraction
 
@@ -63,8 +55,12 @@ white_balance_gains = (3.35, 1.59)
 #Brightness
 br = 50
 
+use_gps = bool(True)
 
 ### End of hard coded image parameters
+
+
+
 
 ######## Start of parameter file read ###########
 # If a an argument is given to gonet4.py, that file will be read ignoring any lines that begin with # or are blank. 
@@ -120,7 +116,27 @@ if  len(sys.argv) >1:
              elif stripped_spline[0] == 'ISO':
                  ISO = int(stripped_spline[1])
    
+             elif stripped_spline[0] == 'use_gps':
+                 #use_gps = bool(stripped_spline[1].capitalize())
+                 #if stripped_spline[1].capitalize() == 'False':
+                 if stripped_spline[1].lower() in ['false', '0', 'f', 'n', 'no', 'nope', 'nyet', 'of course not', 'no way']:
+                    use_gps = bool()
+                 else:
+                    use_gps = bool('True') 
 ######## End of parameter file read ###########
+
+# put nifty comment about gps bypass here!
+print(f'use_gps = {use_gps}')
+if use_gps:
+
+   start_acquire_gps_time = time.perf_counter()
+   os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/FetchGPS) &")
+
+   import FetchGPS
+   open('/home/pi/Tools/Camera/Done_for_GPS', 'a').close()
+   end_acquire_gps_time = time.perf_counter()
+   gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
+   print(f"gps_acquire_time = {gps_acquire_time}")
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/CreateDirs) &")
 
@@ -243,22 +259,22 @@ if (disk_stat('/')) < 10:
 camera_parameters = (f"version: {version}, config: {ifname}, ISO: {ISO}, speed: {shutter_speed}, images: {number_of_images}, free disk space: {(round(disk_stat('/'),2))} GB") 
 print(camera_parameters)
 
+if use_gps:
 
-
-gps_mode = FetchGPS.GPSMode
-latitude = FetchGPS.GPSLat
-longitude = FetchGPS.GPSLong
-altitude = FetchGPS.GPSAlt
-
-#gps_data = (f"gps_mode: {FetchGPS.GPSMode}, lat: {FetchGPS.GPSLat}, long: {FetchGPS.GPSLong}, alt: {FetchGPS.GPSAlt}")
-gps_data = (f"gps_mode: {gps_mode}, lat: {latitude}, long: {longitude}, alt: {altitude}")
-print(gps_data)
-
-exif_latitude = convert_gps_lat_to_exif_lat(latitude)
-exif_longitude = convert_gps_long_to_exif_long(longitude)
-exif_altitude = convert_gps_alt_to_exif_alt(altitude)
-exif_gps_data =(f"exif_latitude: {exif_latitude}, exif_longitude: {exif_longitude}, exif_altitude: {exif_altitude}")
-print(exif_gps_data)
+   gps_mode = FetchGPS.GPSMode
+   latitude = FetchGPS.GPSLat
+   longitude = FetchGPS.GPSLong
+   altitude = FetchGPS.GPSAlt
+   
+   #gps_data = (f"gps_mode: {FetchGPS.GPSMode}, lat: {FetchGPS.GPSLat}, long: {FetchGPS.GPSLong}, alt: {FetchGPS.GPSAlt}")
+   gps_data = (f"gps_mode: {gps_mode}, lat: {latitude}, long: {longitude}, alt: {altitude}")
+   print(gps_data)
+   
+   exif_latitude = convert_gps_lat_to_exif_lat(latitude)
+   exif_longitude = convert_gps_long_to_exif_long(longitude)
+   exif_altitude = convert_gps_alt_to_exif_alt(altitude)
+   exif_gps_data =(f"exif_latitude: {exif_latitude}, exif_longitude: {exif_longitude}, exif_altitude: {exif_altitude}")
+   print(exif_gps_data)
 
 ##### Imaging begins here! #####
 
@@ -274,7 +290,16 @@ d = ImageDraw.Draw(img)
 
 
 # White Text
-image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(longitude))} {get_exif_long_dir(longitude)} {altitude} M")
+
+if use_gps:
+
+   image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(longitude))} {get_exif_long_dir(longitude)} {altitude} M")
+
+else:
+
+   image_gps_fix = 'GPS BYPASSED'
+
+
 d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_ss + "s"\
 + " ISO: " + str(ISO) + " " + strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
 
