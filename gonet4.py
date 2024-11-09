@@ -82,6 +82,11 @@ if  len(sys.argv) >1:
       number_of_images = input("Please Enter Your Desired Number of Images: ")
       shutter_speed = int(input("Please Enter Your Desired Shutter Speed in Microseconds: "))
       ISO = input("Please Enter Your Desired ISO: ")
+      gps = input("Do want gps data? ")
+      if gps.lower() in ['false', '0', 'f', 'n', 'no', 'nope', 'nyet', 'of course not', 'no way']:
+         use_gps = bool() 
+
+ 
 
    else:
       # open the file config.txt file
