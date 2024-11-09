@@ -23,10 +23,13 @@ sys.path.insert(0, '/home/pi/Tools/FetchGPS')
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Param) &")
 
+# Monkey patch to extend software 6 second exposure limit 
 from picamera import PiCamera
 print(f"PiCamera.CAPTURE_TIMEOUT = {PiCamera.CAPTURE_TIMEOUT}")
 PiCamera.CAPTURE_TIMEOUT = 600
 print(f"PiCamera.CAPTURE_TIMEOUT = {PiCamera.CAPTURE_TIMEOUT}")
+
+
 from time import sleep
 from fractions import Fraction
 
