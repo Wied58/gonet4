@@ -144,7 +144,12 @@ if use_gps:
    open('/home/pi/Tools/Camera/Done_for_GPS', 'a').close()
    end_acquire_gps_time = time.perf_counter()
    gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
-   print(f"gps_acquire_time = {gps_acquire_time}")
+
+else:
+
+   gps_acquire_time = 0.0
+
+print(f"gps_acquire_time = {gps_acquire_time}")
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/CreateDirs) &")
 
@@ -253,6 +258,7 @@ def convert_gps_alt_to_exif_alt(altitude):
     # The exif requires a string in the format to be xxxxxx/1000
     # We take the xxx.xxx and multiply that by 1000 and 
     # convert that to whole number as a string and append /1000 
+    print(f" altitude = {altitude}") 
     return (f"{str(int(altitude*1000))}/1000")
 
 #################################
@@ -274,15 +280,22 @@ if use_gps:
    longitude = FetchGPS.GPSLong
    altitude = FetchGPS.GPSAlt
    
-   #gps_data = (f"gps_mode: {FetchGPS.GPSMode}, lat: {FetchGPS.GPSLat}, long: {FetchGPS.GPSLong}, alt: {FetchGPS.GPSAlt}")
-   gps_data = (f"gps_mode: {gps_mode}, lat: {latitude}, long: {longitude}, alt: {altitude}")
-   print(gps_data)
+else:
+
+   gps_mode = "B"
+   latitude = 0.0
+   longitude = 0.0
+   altitude = 0.0
    
-   exif_latitude = convert_gps_lat_to_exif_lat(latitude)
-   exif_longitude = convert_gps_long_to_exif_long(longitude)
-   exif_altitude = convert_gps_alt_to_exif_alt(altitude)
-   exif_gps_data =(f"exif_latitude: {exif_latitude}, exif_longitude: {exif_longitude}, exif_altitude: {exif_altitude}")
-   print(exif_gps_data)
+#gps_data = (f"gps_mode: {FetchGPS.GPSMode}, lat: {FetchGPS.GPSLat}, long: {FetchGPS.GPSLong}, alt: {FetchGPS.GPSAlt}")
+gps_data = (f"gps_mode: {gps_mode}, lat: {latitude}, long: {longitude}, alt: {altitude}")
+print(gps_data)
+
+exif_latitude = convert_gps_lat_to_exif_lat(latitude)
+exif_longitude = convert_gps_long_to_exif_long(longitude)
+exif_altitude = convert_gps_alt_to_exif_alt(altitude)
+exif_gps_data =(f"exif_latitude: {exif_latitude}, exif_longitude: {exif_longitude}, exif_altitude: {exif_altitude}")
+print(exif_gps_data)
 
 ##### Imaging begins here! #####
 
