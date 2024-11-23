@@ -79,9 +79,9 @@ if  len(sys.argv) >1:
 
    if ifname.__eq__('manual'):
 
-      number_of_images = input("Please Enter Your Desired Number of Images: ")
+      number_of_images = int(input("Please Enter Your Desired Number of Images: "))
       shutter_speed = int(input("Please Enter Your Desired Shutter Speed in Microseconds: "))
-      ISO = input("Please Enter Your Desired ISO: ")
+      ISO = int(input("Please Enter Your Desired ISO: "))
       gps = input("Do want gps data? ")
       if gps.lower() in ['false', '0', 'f', 'n', 'no', 'nope', 'nyet', 'of course not', 'no way']:
          use_gps = bool() 
@@ -340,7 +340,6 @@ os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Imaging)
 start_imaging = time.perf_counter()
 
 try:
-
     camera = PiCamera(sensor_mode=3)
     sleep(1)
     # Set a framerate of 1/6fps, then set shutter
@@ -358,7 +357,9 @@ try:
     camera.stop_preview()
     camera.awb_mode = 'off'
 
+
 except:
+    print("didn't take a picture")
     os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Camera_Error) &")
     sys.exit() 
 
