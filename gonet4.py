@@ -370,6 +370,10 @@ camera.exif_tags['GPS.GPSLatitudeRef'] = get_exif_lat_dir(latitude)
 camera.exif_tags['GPS.GPSAltitude'] = exif_altitude
 
 
+# experimenting with trying to get ISO to show other than 6 in exif. 
+#camera.exif_tags['ExifIFD.ISOSpeed'] = str(400)
+
+
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
 
 cap = os.listdir('/home/pi/Tools/LensStatus/Status')
