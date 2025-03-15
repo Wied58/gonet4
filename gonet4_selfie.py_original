@@ -16,22 +16,24 @@ import re
 from collections import deque
 from datetime import datetime
 import math
-import numpy as np
-
 open('/home/pi/Tools/Camera/Search GPS', 'a').close()
 sys.path.insert(0, '/home/pi/Tools/FetchGPS')
 
 
+os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/FetchGPS) &")
+
+start_acquire_gps_time = time.perf_counter()
+import FetchGPS_Selfie
+open('/home/pi/Tools/Camera/Done_for_GPS', 'a').close()
+end_acquire_gps_time = time.perf_counter()
+gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
+print(f"gps_acquire_time = {gps_acquire_time}")
+
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Param) &")
 
-# Monkey patch to extend software 6 second exposure limit 
 from picamera import PiCamera
-print(f"PiCamera.CAPTURE_TIMEOUT = {PiCamera.CAPTURE_TIMEOUT}")
 PiCamera.CAPTURE_TIMEOUT = 600
-print(f"PiCamera.CAPTURE_TIMEOUT = {PiCamera.CAPTURE_TIMEOUT}")
-
-
 from time import sleep
 from fractions import Fraction
 
@@ -43,7 +45,7 @@ shutter_speed = 6000000
 
 
 # Number of images
-number_of_images = 5
+number_of_images = 1
 
 # Sensitivity (ISO)
 ISO = 800
@@ -60,12 +62,8 @@ white_balance_gains = (3.35, 1.59)
 #Brightness
 br = 50
 
-use_gps = bool(True)
 
 ### End of hard coded image parameters
-
-
-
 
 ######## Start of parameter file read ###########
 # If a an argument is given to gonet4.py, that file will be read ignoring any lines that begin with # or are blank. 
@@ -76,82 +74,43 @@ if  len(sys.argv) >1:
 
    # Here is the important part! It takes that argument parameter and assigns to a variable name, or the file we will open
    ifname = sys.argv[1]
-
-   # if iname = manual prompt for varible input - else process file
-
-   if ifname.__eq__('manual'):
-
-      number_of_images = int(input("Please Enter Your Desired Number of Images: "))
-      shutter_speed = int(input("Please Enter Your Desired Shutter Speed in Microseconds: "))
-      ISO = int(input("Please Enter Your Desired ISO: "))
-      gps = input("Do want gps data? ")
-      if gps.lower() in ['false', '0', 'f', 'n', 'no', 'nope', 'nyet', 'of course not', 'no way']:
-         use_gps = bool() 
-
- 
-
-   else:
-      # open the file config.txt file
-      with open(ifname) as params:
-      
-        #iterate (loop) through the lines of the file
-        for line in params:
-      
-      #   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, process it.  We'll talk about strip later
    
-          if line[0] != '#' and len(line.strip()) > 0: 
-      
-      #      We replace the newline \n, then split the line at the equal sign.
-             spline = line.replace('\n','').split('=')
-      #       print(spline)
-      
-      
-      #      Here we iterate, or loop, across the list, strip the spaces off the ends of the list elements
-             stripped_spline = [x.strip() for x in spline]
-      
-      #      Now we print the pieces, or elemments of the list.
-      
-      
-      #       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
-      #       we can start parsing the information into parameters to feed the camera.
-      
-      
-      
-             if stripped_spline[0] == 'number_of_images':
-                 number_of_images = int(stripped_spline[1])
-      
-             elif stripped_spline[0] == 'shutter_speed':
-                 shutter_speed = int(stripped_spline[1])
-      
-             elif stripped_spline[0] == 'ISO':
-                 ISO = int(stripped_spline[1])
+   # open the file config.txt file
+   with open(ifname) as params:
    
-             elif stripped_spline[0] == 'use_gps':
-                 #use_gps = bool(stripped_spline[1].capitalize())
-                 #if stripped_spline[1].capitalize() == 'False':
-                 if stripped_spline[1].lower() in ['false', '0', 'f', 'n', 'no', 'nope', 'nyet', 'of course not', 'no way']:
-                    use_gps = bool()
-                 else:
-                    use_gps = bool('True') 
+     #iterate (loop) through the lines of the file
+     for line in params:
+   
+   #   if the line does not start with # and is longer than 0 after stripping leading and trailing spaces, process it.  We'll talk about strip later
+
+       if line[0] != '#' and len(line.strip()) > 0: 
+   
+   #      We replace the newline \n, then split the line at the equal sign.
+          spline = line.replace('\n','').split('=')
+   #       print(spline)
+   
+   
+   #      Here we iterate, or loop, across the list, strip the spaces off the ends of the list elements
+          stripped_spline = [x.strip() for x in spline]
+   
+   #      Now we print the pieces, or elemments of the list.
+   
+   
+   #       Now that we got rid of the commeted and empty lines, broke the pieces of the lines into clean pieces 
+   #       we can start parsing the information into parameters to feed the camera.
+   
+   
+   
+          if stripped_spline[0] == 'number_of_images':
+              number_of_images = int(stripped_spline[1])
+   
+          elif stripped_spline[0] == 'shutter_speed':
+              shutter_speed = int(stripped_spline[1])
+   
+          elif stripped_spline[0] == 'ISO':
+              ISO = int(stripped_spline[1])
+
 ######## End of parameter file read ###########
-
-# put nifty comment about gps bypass here!
-print(f'use_gps = {use_gps}')
-if use_gps:
-
-   start_acquire_gps_time = time.perf_counter()
-   os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/FetchGPS) &")
-
-   import FetchGPS
-   open('/home/pi/Tools/Camera/Done_for_GPS', 'a').close()
-   end_acquire_gps_time = time.perf_counter()
-   gps_acquire_time = end_acquire_gps_time - start_acquire_gps_time
-
-else:
-
-   gps_acquire_time = 0.0
-
-print(f"gps_acquire_time = {gps_acquire_time}")
 
 os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/CreateDirs) &")
 
@@ -260,40 +219,7 @@ def convert_gps_alt_to_exif_alt(altitude):
     # The exif requires a string in the format to be xxxxxx/1000
     # We take the xxx.xxx and multiply that by 1000 and 
     # convert that to whole number as a string and append /1000 
-    print(f" altitude = {altitude}") 
     return (f"{str(int(altitude*1000))}/1000")
-
-
-def is_saturated(file_path):
-
-    num_bytes = 18711040
-
-    # Execute the 'tail' command to get the last 'num_bytes' of the file
-    result = subprocess.run(
-        ['tail', '-c', str(num_bytes), file_path],
-        capture_output=True,
-        check=True
-    )
-    
-    # Capture the output bytes
-    output_bytes = result.stdout
-    
-    # Convert the bytes to a NumPy array
-    array = np.frombuffer(output_bytes, dtype=np.uint8)
-    
-    # Step 1: Create a boolean mask where elements > 4095 are True
-    mask = array > 4095
-     
-    # Step 2: Count the number of True values in the mask
-    count = np.count_nonzero(mask)
-     
-    # Step 3: Check if the count exceeds 100
-    if count > 100:
-        print("More than 100 elements are greater than 4095. Image is Saturated.")
-    else:
-        print("100 or fewer elements are greater than 4095. Image is not Saturated.")
-
-
 
 #################################
 ##### Start of main program #####
@@ -307,20 +233,13 @@ if (disk_stat('/')) < 10:
 camera_parameters = (f"version: {version}, config: {ifname}, ISO: {ISO}, speed: {shutter_speed}, images: {number_of_images}, free disk space: {(round(disk_stat('/'),2))} GB") 
 print(camera_parameters)
 
-if use_gps:
 
-   gps_mode = FetchGPS.GPSMode
-   latitude = FetchGPS.GPSLat
-   longitude = FetchGPS.GPSLong
-   altitude = FetchGPS.GPSAlt
-   
-else:
 
-   gps_mode = "B"
-   latitude = 0.0
-   longitude = 0.0
-   altitude = 0.0
-   
+gps_mode = FetchGPS_Selfie.GPSMode
+latitude = FetchGPS_Selfie.GPSLat
+longitude = FetchGPS_Selfie.GPSLong
+altitude = FetchGPS_Selfie.GPSAlt
+
 #gps_data = (f"gps_mode: {FetchGPS.GPSMode}, lat: {FetchGPS.GPSLat}, long: {FetchGPS.GPSLong}, alt: {FetchGPS.GPSAlt}")
 gps_data = (f"gps_mode: {gps_mode}, lat: {latitude}, long: {longitude}, alt: {altitude}")
 print(gps_data)
@@ -345,16 +264,7 @@ d = ImageDraw.Draw(img)
 
 
 # White Text
-
-if use_gps:
-
-   image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(longitude))} {get_exif_long_dir(longitude)} {altitude} M")
-
-else:
-
-   image_gps_fix = 'GPS BYPASSED'
-
-
+image_gps_fix = (f"{str(abs(latitude))} {get_exif_lat_dir(latitude)} {str(abs(longitude))} {get_exif_long_dir(longitude)} {altitude} M")
 d.text((20,10), "Adler / Far Horizons  " + socket.gethostname() + " " + version + " Exp: " + tag_ss + "s"\
 + " ISO: " + str(ISO) + " " + strftime("%y%m%d %H:%M:%S", gmtime()) + " UTC " + image_gps_fix , font=font, fill=(255,255,255))
 
@@ -374,26 +284,24 @@ os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Imaging)
 start_imaging = time.perf_counter()
 
 try:
+#### Modified for Selfie functionality ####
     camera = PiCamera(sensor_mode=3)
     sleep(1)
     # Set a framerate of 1/6fps, then set shutter
     # speed to 6s and ISO to 800
-    camera.framerate_range = (Fraction(1,100), Fraction(1,2)) 
-    camera.shutter_speed = shutter_speed
-    camera.iso = ISO
-    camera.drc_strength=drc
+    camera.shutter_speed = 0
+    camera.iso = 800
+    camera.drc_strength='off'
     camera.awb_gains = white_balance_gains
-    camera.brightness = br
-    camera.still_stats = True
+    camera.brightness = 50
+    camera.still_stats = False
     camera.resolution = (4056, 3040)
     # experiment to dump metering
-    camera.exposure_mode = 'off'
+    camera.exposure_mode = 'auto'
     camera.stop_preview()
-    camera.awb_mode = 'off'
-
+    camera.awb_mode = 'auto'
 
 except:
-    print("didn't take a picture")
     os.system("(rm -rf /home/pi/Tools/Status/*; touch /home/pi/Tools/Status/Camera_Error) &")
     sys.exit() 
 
@@ -404,13 +312,7 @@ camera.exif_tags['GPS.GPSLatitudeRef'] = get_exif_lat_dir(latitude)
 camera.exif_tags['GPS.GPSAltitude'] = exif_altitude
 
 
-# experimenting with trying to get ISO to show other than 6 in exif. 
-#camera.exif_tags['ExifIFD.ISOSpeed'] = str(400)
-
-
 camera.exif_tags['IFD0.Software'] = socket.gethostname() + ' ' + version + ' WB: ' + str(white_balance_gains)
-
-cap = os.listdir('/home/pi/Tools/LensStatus/Status')
 
 adler_exif_tags = (f"\
 Hostname: {socket.gethostname()}, \
@@ -418,8 +320,7 @@ Version: {version}, \
 WB: {str(white_balance_gains)}, \
 Lat: {latitude}, \
 Long: {longitude}, \
-Alt: {altitude}, \
-Lenscap: {cap[0]}\
+Alt: {altitude}\
 ")
 
 camera.exif_tags['IFD0.Artist'] = adler_exif_tags 
@@ -482,8 +383,6 @@ for filename in os.listdir(scratch_dir):
      # from: https://www.raspberrypi.org/forums/viewtopic.php?t=273500
      subprocess.call(['tail', '-c', '18711040', scratch_dir + filename], stdout=composite_file)
 
-     # Work here for saturation test?
-     is_saturated(scratch_dir + filename)
 
      # create thumnail here?
      MAX_SIZE = (160, 120) 
